@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<style>
+html,body{margin:0;background:#0B1029}
+*{box-sizing:border-box}
+a{color:#8FE0CF}
+a:hover{color:#8FE0CF}
+</style>
+</helmet>
+<div style="width: 3080px; padding: 80px; background: #0B1029; color: #D5DAF7; font-family: 'IBM Plex Sans', sans-serif; display: flex; flex-direction: column; gap: 120px;">
+
+  <header style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 32px; border-bottom: 1px solid #2A3363;">
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <img src="assets/madar-mark-dark-bg.svg" alt="" width="48" height="48">
+      <div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: #8FE0CF;">Madar AI · Screens</div>
+        <h1 style="margin: 4px 0 0; font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 56px; letter-spacing: -0.02em; color: #EAF0FF;">Desktop, mobile and light mode</h1>
+      </div>
+    </div>
+    <div style="display: flex; gap: 28px; font-size: 18px;">
+      <a href="Madar AI Foundations.dc.html">Foundations and components</a>
+      <a href="Madar AI Prototype.dc.html">Open the clickable prototype</a>
+    </div>
+  </header>
+
+  <section data-screen-label="Desktop screens" style="display: flex; flex-direction: column; gap: 40px;">
+    <h2 style="margin: 0; display: flex; gap: 16px; align-items: baseline; font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 44px; color: #EAF0FF;"><span style="font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-size: 14px; letter-spacing: 0.12em; color: #8FE0CF;">03</span>Desktop · 1440</h2>
+    <div style="display: flex; flex-wrap: wrap; gap: 80px 40px; align-items: flex-start;">
+
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">3.1 Landing page</span>
+        <div style="width: 1440px; height: 1160px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" screen="landing" frame-h="100%" frame-w="{{ 1440 }}" hint-size="1440px,1160px" style="width: 100%; height: 100%;"></dc-import></div></div>
+
+      <div style="display: flex; flex-direction: column; gap: 40px;">
+        <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">3.2 Sign up · first name optional</span>
+          <div style="width: 1440px; height: 560px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" screen="auth" auth-mode="signup" frame-h="100%" frame-w="{{ 1440 }}" hint-size="1440px,560px" style="width: 100%; height: 100%;"></dc-import></div></div>
+        <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">3.2 Sign in · signed-out state</span>
+          <div style="width: 1440px; height: 560px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" screen="auth" auth-mode="signin" preset="signedout" frame-h="100%" frame-w="{{ 1440 }}" hint-size="1440px,560px" style="width: 100%; height: 100%;"></dc-import></div></div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">3.3 Subject picker · first screen after sign-in</span>
+        <div style="width: 1440px; height: 900px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" screen="subjects" frame-h="100%" frame-w="{{ 1440 }}" hint-size="1440px,900px" style="width: 100%; height: 100%;"></dc-import></div></div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">3.4 Chat · empty state</span>
+        <div style="width: 1440px; height: 900px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" screen="chat" preset="empty" subject="econ" frame-h="100%" frame-w="{{ 1440 }}" hint-size="1440px,900px" style="width: 100%; height: 100%;"></dc-import></div></div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">3.4 Chat · thinking, mark animates while the answer streams</span>
+        <div style="width: 1440px; height: 900px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" screen="chat" preset="thinking" frame-h="100%" frame-w="{{ 1440 }}" hint-size="1440px,900px" style="width: 100%; height: 100%;"></dc-import></div></div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">3.4 Chat · answer with one citation</span>
+        <div style="width: 1440px; height: 900px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" screen="chat" preset="one" frame-h="100%" frame-w="{{ 1440 }}" hint-size="1440px,900px" style="width: 100%; height: 100%;"></dc-import></div></div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">3.5 Two citations · source panel open on the second</span>
+        <div style="width: 1440px; height: 900px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" screen="chat" preset="two" source-open="{{ true }}" source-idx="{{ 1 }}" frame-h="100%" frame-w="{{ 1440 }}" hint-size="1440px,900px" style="width: 100%; height: 100%;"></dc-import></div></div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">3.4 Chat · formula (Physics)</span>
+        <div style="width: 1440px; height: 900px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" screen="chat" preset="formula" frame-h="100%" frame-w="{{ 1440 }}" hint-size="1440px,900px" style="width: 100%; height: 100%;"></dc-import></div></div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">3.4 Chat · formula and table · source open</span>
+        <div style="width: 1440px; height: 900px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" screen="chat" preset="table" source-open="{{ true }}" frame-h="100%" frame-w="{{ 1440 }}" hint-size="1440px,900px" style="width: 100%; height: 100%;"></dc-import></div></div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">3.4 Chat · question outside the syllabus</span>
+        <div style="width: 1440px; height: 900px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" screen="chat" preset="outside" frame-h="100%" frame-w="{{ 1440 }}" hint-size="1440px,900px" style="width: 100%; height: 100%;"></dc-import></div></div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">3.4 Chat · error with Retry</span>
+        <div style="width: 1440px; height: 900px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" screen="chat" preset="error" frame-h="100%" frame-w="{{ 1440 }}" hint-size="1440px,900px" style="width: 100%; height: 100%;"></dc-import></div></div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">3.4 Chat · long answer, scrolled</span>
+        <div style="width: 1440px; height: 900px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" screen="chat" preset="long" frame-h="100%" frame-w="{{ 1440 }}" hint-size="1440px,900px" style="width: 100%; height: 100%;"></dc-import></div></div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">3.4 Sidebar collapsed · subject switcher open</span>
+        <div style="width: 1440px; height: 900px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" screen="chat" preset="one" collapsed="{{ true }}" subject-menu="{{ true }}" frame-h="100%" frame-w="{{ 1440 }}" hint-size="1440px,900px" style="width: 100%; height: 100%;"></dc-import></div></div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">3.6 Chat history and settings</span>
+        <div style="width: 1440px; height: 900px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" screen="chat" preset="formula" settings-open="{{ true }}" frame-h="100%" frame-w="{{ 1440 }}" hint-size="1440px,900px" style="width: 100%; height: 100%;"></dc-import></div></div>
+    </div>
+  </section>
+
+  <section data-screen-label="Tablet and mobile" style="display: flex; flex-direction: column; gap: 40px;">
+    <h2 style="margin: 0; display: flex; gap: 16px; align-items: baseline; font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 44px; color: #EAF0FF;"><span style="font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-size: 14px; letter-spacing: 0.12em; color: #8FE0CF;">04</span>Tablet · 768 and mobile · 390</h2>
+    <div style="display: flex; flex-wrap: wrap; gap: 80px 40px; align-items: flex-start;">
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">Tablet · chat, source overlay</span>
+        <div style="width: 768px; height: 1024px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" screen="chat" preset="formula" source-open="{{ true }}" frame-h="100%" frame-w="{{ 768 }}" hint-size="768px,1024px" style="width: 100%; height: 100%;"></dc-import></div></div>
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">Mobile · landing</span>
+        <div style="width: 390px; height: 1560px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" screen="landing" frame-h="100%" frame-w="{{ 390 }}" hint-size="390px,1560px" style="width: 100%; height: 100%;"></dc-import></div></div>
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">Mobile · subject picker</span>
+        <div style="width: 390px; height: 844px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" screen="subjects" frame-h="100%" frame-w="{{ 390 }}" hint-size="390px,844px" style="width: 100%; height: 100%;"></dc-import></div></div>
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">Mobile · chat empty</span>
+        <div style="width: 390px; height: 844px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" screen="chat" preset="empty" subject="phys" frame-h="100%" frame-w="{{ 390 }}" hint-size="390px,844px" style="width: 100%; height: 100%;"></dc-import></div></div>
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">Mobile · chat answer</span>
+        <div style="width: 390px; height: 844px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" screen="chat" preset="two" frame-h="100%" frame-w="{{ 390 }}" hint-size="390px,844px" style="width: 100%; height: 100%;"></dc-import></div></div>
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">Mobile · source bottom sheet</span>
+        <div style="width: 390px; height: 844px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" screen="chat" preset="one" source-open="{{ true }}" frame-h="100%" frame-w="{{ 390 }}" hint-size="390px,844px" style="width: 100%; height: 100%;"></dc-import></div></div>
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">Mobile · subject switcher, top sheet</span>
+        <div style="width: 390px; height: 844px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" screen="chat" preset="one" subject-menu="{{ true }}" frame-h="100%" frame-w="{{ 390 }}" hint-size="390px,844px" style="width: 100%; height: 100%;"></dc-import></div></div>
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">Mobile · chat history</span>
+        <div style="width: 390px; height: 844px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" screen="chat" preset="one" drawer-open="{{ true }}" frame-h="100%" frame-w="{{ 390 }}" hint-size="390px,844px" style="width: 100%; height: 100%;"></dc-import></div></div>
+    </div>
+  </section>
+
+  <section data-screen-label="Light mode" style="display: flex; flex-direction: column; gap: 40px;">
+    <h2 style="margin: 0; display: flex; gap: 16px; align-items: baseline; font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 44px; color: #EAF0FF;"><span style="font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-size: 14px; letter-spacing: 0.12em; color: #8FE0CF;">05</span>Light mode</h2>
+    <div style="display: flex; flex-wrap: wrap; gap: 80px 40px; align-items: flex-start;">
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">Light · landing</span>
+        <div style="width: 1440px; height: 1160px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" theme="light" screen="landing" frame-h="100%" frame-w="{{ 1440 }}" hint-size="1440px,1160px" style="width: 100%; height: 100%;"></dc-import></div></div>
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">Light · subject picker</span>
+        <div style="width: 1440px; height: 900px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" theme="light" screen="subjects" frame-h="100%" frame-w="{{ 1440 }}" hint-size="1440px,900px" style="width: 100%; height: 100%;"></dc-import></div></div>
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">Light · chat, two citations, source open</span>
+        <div style="width: 1440px; height: 900px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" theme="light" screen="chat" preset="two" source-open="{{ true }}" frame-h="100%" frame-w="{{ 1440 }}" hint-size="1440px,900px" style="width: 100%; height: 100%;"></dc-import></div></div>
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">Light · formula and table</span>
+        <div style="width: 1440px; height: 900px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" theme="light" screen="chat" preset="table" frame-h="100%" frame-w="{{ 1440 }}" hint-size="1440px,900px" style="width: 100%; height: 100%;"></dc-import></div></div>
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">Light · settings with appearance</span>
+        <div style="width: 1440px; height: 900px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" theme="light" screen="chat" preset="formula" settings-open="{{ true }}" frame-h="100%" frame-w="{{ 1440 }}" hint-size="1440px,900px" style="width: 100%; height: 100%;"></dc-import></div></div>
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">Light · error</span>
+        <div style="width: 1440px; height: 900px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" theme="light" screen="chat" preset="error" frame-h="100%" frame-w="{{ 1440 }}" hint-size="1440px,900px" style="width: 100%; height: 100%;"></dc-import></div></div>
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">Light · mobile chat</span>
+        <div style="width: 390px; height: 844px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" theme="light" screen="chat" preset="formula" frame-h="100%" frame-w="{{ 390 }}" hint-size="390px,844px" style="width: 100%; height: 100%;"></dc-import></div></div>
+      <div style="display: flex; flex-direction: column; gap: 14px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #9AA3D0;">Light · mobile source sheet</span>
+        <div style="width: 390px; height: 844px; border: 1px solid #2A3363; border-radius: 12px; overflow: hidden;"><dc-import name="Madar AI Prototype" theme="light" screen="chat" preset="one" source-open="{{ true }}" frame-h="100%" frame-w="{{ 390 }}" hint-size="390px,844px" style="width: 100%; height: 100%;"></dc-import></div></div>
+    </div>
+  </section>
+
+  <section data-screen-label="Assumptions" style="display: grid; grid-template-columns: 420px minmax(0, 1fr); gap: 60px; padding-top: 48px; border-top: 1px solid #2A3363;">
+    <h2 style="margin: 0; display: flex; flex-direction: column; gap: 12px; font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 44px; color: #EAF0FF;"><span style="font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-size: 14px; letter-spacing: 0.12em; color: #8FE0CF;">07</span>Assumptions and open questions</h2>
+    <ol style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 24px 56px; font-size: 19px; line-height: 1.6; color: #D5DAF7;">
+      <li style="display: flex; gap: 16px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #8FE0CF; padding-top: 4px;">01</span><span>The kit has no error red. Form errors and the failed-answer alert use the warning colours.</span></li>
+      <li style="display: flex; gap: 16px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #8FE0CF; padding-top: 4px;">02</span><span>Palette 1c: indigo surfaces, teal-light (#8FE0CF) accents and citations, terracotta (#E27A4E) for all buttons with white text (≈3.2:1 — review for AA). Light mode uses deep teal buttons for contrast.</span></li>
+      <li style="display: flex; gap: 16px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #8FE0CF; padding-top: 4px;">03</span><span>"Start asking" goes to sign-up. Picking a subject on the landing page carries through sign-up straight into that subject's chat.</span></li>
+      <li style="display: flex; gap: 16px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #8FE0CF; padding-top: 4px;">04</span><span>A new chat is only listed in history after its first question. Chats are titled by their first question.</span></li>
+      <li style="display: flex; gap: 16px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #8FE0CF; padding-top: 4px;">05</span><span>One citation opens at a time in the source panel. Tapping the other citation line swaps it; tapping the open one closes it.</span></li>
+      <li style="display: flex; gap: 16px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #8FE0CF; padding-top: 4px;">06</span><span>Out-of-syllabus answers end with a muted "Not in the syllabus" line where the citation would be, so every answer ends the same way.</span></li>
+      <li style="display: flex; gap: 16px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #8FE0CF; padding-top: 4px;">07</span><span>Settings holds only language and account (name, email, sign out). Password reset is a link on sign-in and isn't designed here.</span></li>
+      <li style="display: flex; gap: 16px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #8FE0CF; padding-top: 4px;">08</span><span>Tablet (700–1099px) hides the sidebar behind a menu button and opens the source panel as an overlay. Desktop docks both.</span></li>
+      <li style="display: flex; gap: 16px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #8FE0CF; padding-top: 4px;">09</span><span>English only for now; Arabic RTL screens are parked (the prototype keeps a language switch). Syllabus topics, page numbers and excerpts are fictional placeholders. In the prototype, any question that doesn't match the sample content gets the out-of-syllabus reply.</span></li>
+      <li style="display: flex; gap: 16px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #8FE0CF; padding-top: 4px;">10</span><span>The Madar mark replaces the indigo Madar AI mark. The thinking animation reuses the orbit-ring motion, recoloured teal with a terracotta core. Confirm with the brand owner.</span></li>
+      <li style="display: flex; gap: 16px;"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #8FE0CF; padding-top: 4px;">11</span><span>Avatars show the first initial only, because sign-up asks for a first name alone. If there's no name, the email's first letter is used.</span></li>
+    </ol>
+  </section>
+</div>
+</x-dc>
+</body>
+</html>

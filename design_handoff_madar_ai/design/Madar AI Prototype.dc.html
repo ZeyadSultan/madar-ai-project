@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<style>
+@keyframes mdrSpin{to{transform:rotate(360deg)}}
+@keyframes mdrPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.78);opacity:.72}}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+[data-theme="dark"]{--page:#0B1029;--panel:#0E1533;--card:#111838;--raised:#1A2350;--border:#2A3363;--border-strong:#3A4586;--accent:#8FE0CF;--action:#E27A4E;--on-action:#FFFFFF;--cta:#E27A4E;--on-cta:#FFFFFF;--heading:#EAF0FF;--body:#D5DAF7;--muted:#9AA3D0;--hl:#2A3363;--warn-bg:#33280F;--warn-border:#6B5427;--warn-text:#E0AE55;--scrim:rgba(11,16,41,0.72);--mark-ring:rgba(143,224,207,0.35);--mark-inner:rgba(143,224,207,0.45);color-scheme:dark}
+[data-theme="light"]{--page:#FBF7F1;--panel:#F4EEE5;--card:#FFFFFF;--raised:#EFE7DA;--border:#E8E0D5;--border-strong:#D3C6B4;--accent:#0F5C52;--action:#0F5C52;--on-action:#FFFFFF;--cta:#D97048;--on-cta:#FFFFFF;--heading:#221F1C;--body:#3B3631;--muted:#635C54;--hl:#F8DCCD;--warn-bg:#FBF1DC;--warn-border:#E2C68A;--warn-text:#7A5410;--scrim:rgba(34,31,28,0.4);--mark-ring:rgba(15,92,82,0.28);--mark-inner:rgba(15,92,82,0.4);color-scheme:light}
+html,body{margin:0}
+*{box-sizing:border-box}
+button{font:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input::placeholder,textarea::placeholder{color:var(--muted);opacity:1}
+a{color:var(--accent)}
+a:hover{color:var(--heading)}
+</style>
+</helmet>
+<div ref="{{ rootRef }}" data-theme="{{ theme }}" dir="{{ dir }}" lang="{{ lang }}" style="position: relative; width: 100%; height: {{ rootH }}; overflow: hidden; background: var(--page); color: var(--body); font-family: {{ fBody }}; font-size: 15px; line-height: 1.6;">
+
+<sc-if value="{{ isLanding }}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="Landing" style="height: 100%; overflow-y: auto;">
+<div style="max-width: 1200px; min-height: 100%; margin: 0 auto; padding: 0 {{ m.padX }}; display: flex; flex-direction: column;">
+  <header style="display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 76px; flex-shrink: 0;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <img src="{{ markSrc }}" alt="" width="28" height="28">
+      <span style="font-size: 17px; font-weight: 600; color: var(--heading);">Madar AI</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 6px;">
+      <button onClick="{{ toggleLang }}" lang="{{ otherLang }}" style="min-height: 44px; padding: 0 12px; background: transparent; border: none; border-radius: 8px; color: var(--body); font-size: 14px; font-family: {{ fOther }}; cursor: pointer;" style-hover="background: var(--card);">{{ otherLangName }}</button>
+      <button onClick="{{ goSignIn }}" style="min-height: 44px; padding: 0 18px; background: transparent; border: 1px solid var(--border); border-radius: 8px; color: var(--heading); font-size: 15px; font-weight: 500; cursor: pointer;" style-hover="background: var(--card); border-color: var(--border-strong);">{{ t.signIn }}</button>
+    </div>
+  </header>
+  <section style="display: grid; grid-template-columns: {{ m.heroCols }}; gap: 40px; align-items: center; padding: {{ m.heroPad }};">
+    <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 28px;">
+      <div style="font-family: {{ fMono }}; font-size: 12px; letter-spacing: {{ monoTrack }}; text-transform: {{ monoCase }}; color: var(--cta);">{{ t.eyebrow }}</div>
+      <h1 style="margin: 0; font-family: {{ fHead }}; font-weight: 600; font-size: {{ m.h1 }}; line-height: {{ h1Lh }}; letter-spacing: {{ headTrack }}; color: var(--heading); text-wrap: balance;">{{ t.headline }}</h1>
+      <button onClick="{{ startAsking }}" style="min-height: 52px; padding: 15px 26px; background: var(--cta); border: none; border-radius: 8px; color: var(--on-cta); font-size: 16px; font-weight: 600; cursor: pointer;" style-hover="filter: brightness(1.1);">{{ t.startAsking }}</button>
+    </div>
+    <div style="display: flex; justify-content: center; order: {{ m.markOrder }};">{{ heroMark }}</div>
+  </section>
+  <section style="display: grid; grid-template-columns: {{ m.stmtCols }}; gap: 24px;">
+    <sc-for list="{{ statements }}" as="s" hint-placeholder-count="3">
+      <div style="display: flex; flex-direction: column; gap: 12px; padding-top: 20px; border-top: 1px solid var(--border);">
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.12em; color: var(--cta);">{{ s.n }}</span>
+        <p style="margin: 0; font-family: {{ fHead }}; font-weight: 600; font-size: {{ m.stmtSize }}; line-height: 1.35; color: var(--heading); text-wrap: pretty;">{{ s.x }}</p>
+      </div>
+    </sc-for>
+  </section>
+  <section style="display: flex; flex-direction: column; gap: 16px; padding: {{ m.subjSecPad }};">
+    <h2 style="margin: 0; font-family: {{ fMono }}; font-weight: 400; font-size: 12px; letter-spacing: {{ monoTrack }}; text-transform: {{ monoCase }}; color: var(--muted);">{{ t.subjects }}</h2>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+      <sc-for list="{{ subjects }}" as="s" hint-placeholder-count="10">
+        <button onClick="{{ s.onStart }}" style="min-height: 44px; padding: 0 18px; background: var(--card); border: 1px solid var(--border); border-radius: 999px; color: var(--body); font-size: 15px; cursor: pointer;" style-hover="background: var(--raised); border-color: var(--border-strong); color: var(--heading);">{{ s.name }}</button>
+      </sc-for>
+    </div>
+  </section>
+  <footer style="margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 28px 0 32px; border-top: 1px solid var(--border);">
+    <span style="font-size: 13px; color: var(--muted);">{{ t.footer1 }}</span>
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <span style="font-size: 13px; color: var(--muted);">{{ t.footer2 }}</span>
+      <img src="{{ logoSrc }}" alt="Madar" height="20" style="height: 20px; width: auto; display: block;">
+    </div>
+  </footer>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isAuth }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Sign in" style="height: 100%; overflow-y: auto; display: flex; flex-direction: column;">
+  <header style="height: 76px; flex-shrink: 0; display: flex; align-items: center; padding: 0 {{ m.padX }};">
+    <button onClick="{{ goLanding }}" aria-label="Madar AI" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0; background: none; border: none; cursor: pointer;">
+      <img src="{{ markSrc }}" alt="" width="28" height="28">
+      <span style="font-size: 17px; font-weight: 600; color: var(--heading);">Madar AI</span>
+    </button>
+  </header>
+  <div style="flex: 1; display: flex; justify-content: center; align-items: flex-start; padding: {{ m.authPad }};">
+    <form onSubmit="{{ submitAuth }}" noValidate="{{ true }}" style="width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 20px; padding: {{ m.cardPad }}; background: var(--panel); border: 1px solid var(--border); border-radius: 12px;">
+      <h1 style="margin: 0; font-family: {{ fHead }}; font-weight: 600; font-size: 30px; line-height: 1.2; letter-spacing: {{ headTrack }}; color: var(--heading);">{{ authTitle }}</h1>
+      <sc-if value="{{ showSignedOut }}" hint-placeholder-val="{{ false }}">
+        <div role="status" style="padding: 12px 14px; background: var(--raised); border: 1px solid var(--border-strong); border-radius: 8px; color: var(--accent); font-size: 14px; line-height: 1.5;">{{ t.signedOut }}</div>
+      </sc-if>
+      <sc-if value="{{ isSignUp }}" hint-placeholder-val="{{ false }}">
+        <label style="display: flex; flex-direction: column; gap: 8px;">
+          <span style="font-size: 14px; font-weight: 500; color: var(--body);">{{ t.firstName }}</span>
+          <input type="text" autoComplete="given-name" value="{{ first }}" onChange="{{ onFirst }}" style="height: 48px; padding: 0 14px; background: var(--page); border: 1px solid var(--border); border-radius: 8px; color: var(--heading); font-size: 16px; font-family: inherit; outline: none;" style-focus="border-color: var(--accent);">
+        </label>
+      </sc-if>
+      <label style="display: flex; flex-direction: column; gap: 8px;">
+        <span style="font-size: 14px; font-weight: 500; color: var(--body);">{{ t.email }}</span>
+        <input type="email" autoComplete="email" dir="ltr" value="{{ email }}" onChange="{{ onEmail }}" aria-invalid="{{ emailInvalid }}" style="height: 48px; padding: 0 14px; background: var(--page); border: 1px solid {{ emailBorder }}; border-radius: 8px; color: var(--heading); font-size: 16px; font-family: inherit; outline: none; text-align: start;" style-focus="border-color: var(--accent);">
+        <sc-if value="{{ emailInvalid }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; color: var(--warn-text);">{{ errEmail }}</span></sc-if>
+      </label>
+      <label style="display: flex; flex-direction: column; gap: 8px;">
+        <span style="display: flex; justify-content: space-between; gap: 12px; font-size: 14px; font-weight: 500; color: var(--body);"><span>{{ t.password }}</span><sc-if value="{{ isSignIn }}" hint-placeholder-val="{{ true }}"><a href="#" onClick="{{ noop }}" style="font-weight: 400; font-size: 14px; color: var(--accent); text-decoration: none;">{{ t.forgot }}</a></sc-if></span>
+        <input type="password" autoComplete="{{ pwAuto }}" value="{{ pw }}" onChange="{{ onPw }}" aria-invalid="{{ pwInvalid }}" style="height: 48px; padding: 0 14px; background: var(--page); border: 1px solid {{ pwBorder }}; border-radius: 8px; color: var(--heading); font-size: 16px; font-family: inherit; outline: none;" style-focus="border-color: var(--accent);">
+        <sc-if value="{{ pwInvalid }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; color: var(--warn-text);">{{ errPw }}</span></sc-if>
+      </label>
+      <button type="submit" style="height: 48px; background: var(--action); border: none; border-radius: 8px; color: var(--on-action); font-size: 15px; font-weight: 600; cursor: pointer;" style-hover="filter: brightness(1.1);">{{ authCta }}</button>
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px; font-size: 14px; color: var(--muted);">
+        <span>{{ authSwitchQ }}</span>
+        <button type="button" onClick="{{ toggleAuth }}" style="min-height: 44px; padding: 0 6px; background: none; border: none; color: var(--accent); font-size: 14px; font-weight: 500; cursor: pointer;" style-hover="color: var(--accent);">{{ authSwitchA }}</button>
+      </div>
+    </form>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isSubjects }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Subject picker" style="height: 100%; overflow-y: auto;">
+  <header style="height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 {{ m.padX }}; border-bottom: 1px solid var(--border);">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <img src="{{ markSrc }}" alt="" width="26" height="26">
+      <span style="font-size: 16px; font-weight: 600; color: var(--heading);">Madar AI</span>
+    </div>
+    <button onClick="{{ openSettings }}" aria-label="{{ t.settings }}" style="width: 44px; height: 44px; display: grid; place-items: center; padding: 0; background: none; border: none; border-radius: 999px; cursor: pointer;">
+      <span style="width: 34px; height: 34px; display: grid; place-items: center; border-radius: 999px; background: var(--raised); border: 1px solid var(--border-strong); color: var(--accent); font-size: 13px; font-weight: 600;">{{ initials }}</span>
+    </button>
+  </header>
+  <main style="max-width: 1080px; margin: 0 auto; padding: {{ m.subjPad }};">
+    <h1 style="margin: 0; font-family: {{ fHead }}; font-weight: 600; font-size: {{ m.subjH1 }}; line-height: 1.2; letter-spacing: {{ headTrack }}; color: var(--heading);">{{ t.chooseSubject }}</h1>
+    <div style="display: grid; grid-template-columns: {{ m.subjCols }}; gap: {{ m.gridGap }}; margin-top: 28px;">
+      <sc-for list="{{ subjects }}" as="s" hint-placeholder-count="10">
+        <button onClick="{{ s.onStart }}" style="min-height: {{ m.cardH }}; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 18px 20px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; cursor: pointer; text-align: start;" style-hover="background: var(--raised); border-color: var(--border-strong);">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.12em; color: var(--muted);">{{ s.n }}</span>
+          <span style="font-family: {{ fHead }}; font-weight: 600; font-size: {{ m.cardTitle }}; line-height: 1.25; color: var(--heading);">{{ s.name }}</span>
+        </button>
+      </sc-for>
+    </div>
+  </main>
+</div>
+</sc-if>
+
+<sc-if value="{{ isChat }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Chat" style="position: relative; display: flex; height: 100%;">
+
+  <sc-if value="{{ showRail }}" hint-placeholder-val="{{ false }}">
+    <div style="width: 64px; flex-shrink: 0; height: 100%; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 0; background: var(--panel); border-inline-end: 1px solid var(--border);">
+      <img src="{{ markSrc }}" alt="Madar AI" width="26" height="26" style="margin: 4px 0 8px;">
+      <button onClick="{{ sbToggle }}" aria-label="{{ t.expand }}" style="width: 44px; height: 44px; display: grid; place-items: center; background: transparent; border: none; border-radius: 8px; color: var(--muted); cursor: pointer;" style-hover="background: var(--raised); color: var(--heading);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{ flip }};"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M9 3v18"></path></svg>
+      </button>
+      <button onClick="{{ newChat }}" aria-label="{{ t.newChat }}" style="width: 44px; height: 44px; display: grid; place-items: center; background: transparent; border: none; border-radius: 8px; color: var(--muted); cursor: pointer;" style-hover="background: var(--raised); color: var(--heading);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+      </button>
+      <span style="flex: 1;"></span>
+      <button onClick="{{ openSettings }}" aria-label="{{ t.settings }}" style="width: 44px; height: 44px; display: grid; place-items: center; padding: 0; background: none; border: none; border-radius: 999px; cursor: pointer;">
+        <span style="width: 32px; height: 32px; display: grid; place-items: center; border-radius: 999px; background: var(--raised); border: 1px solid var(--border-strong); color: var(--accent); font-size: 12px; font-weight: 600;">{{ initials }}</span>
+      </button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showDrawerScrim }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeDrawer }}" style="position: absolute; inset: 0; z-index: 39; background: var(--scrim);"></div>
+  </sc-if>
+
+  <sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ false }}">
+    <aside aria-label="{{ t.chats }}" style="position: {{ sb.pos }}; top: 0; bottom: 0; inset-inline-start: 0; z-index: {{ sb.z }}; width: {{ sb.w }}; max-width: 86%; height: 100%; flex-shrink: 0; display: flex; flex-direction: column; background: var(--panel); border-inline-end: 1px solid var(--border);">
+      <div style="height: 60px; flex-shrink: 0; display: flex; align-items: center; gap: 10px; padding-inline: 16px 8px;">
+        <img src="{{ markSrc }}" alt="" width="24" height="24">
+        <span style="font-size: 15px; font-weight: 600; color: var(--heading);">Madar AI</span>
+        <span style="flex: 1;"></span>
+        <button onClick="{{ sbToggle }}" aria-label="{{ sbToggleLabel }}" style="width: 44px; height: 44px; display: grid; place-items: center; background: transparent; border: none; border-radius: 8px; color: var(--muted); cursor: pointer;" style-hover="background: var(--raised); color: var(--heading);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{ flip }};"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M9 3v18"></path></svg>
+        </button>
+      </div>
+      <div style="flex-shrink: 0; display: flex; flex-direction: column; gap: 14px; padding: 4px 12px 16px;">
+        <button onClick="{{ newChat }}" style="height: 44px; display: flex; align-items: center; gap: 10px; padding: 0 14px; background: transparent; border: 1px solid var(--border); border-radius: 8px; color: var(--heading); font-size: 15px; font-weight: 500; cursor: pointer;" style-hover="background: var(--raised); border-color: var(--border-strong);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+          <span>{{ t.newChat }}</span>
+        </button>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <span style="font-family: {{ fMono }}; font-size: 10.5px; letter-spacing: {{ monoTrack }}; text-transform: {{ monoCase }}; color: var(--muted); padding-inline-start: 2px;">{{ t.subject }}</span>
+          <button onClick="{{ toggleMenu }}" aria-haspopup="dialog" style="height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 12px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; color: var(--heading); font-size: 15px; cursor: pointer; text-align: start;" style-hover="border-color: var(--border-strong);">
+            <span>{{ sName }}</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+          </button>
+        </div>
+      </div>
+      <nav style="flex: 1; overflow-y: auto; padding: 4px 8px 12px; border-top: 1px solid var(--border);">
+        <sc-if value="{{ hasToday }}" hint-placeholder-val="{{ true }}">
+          <div style="font-family: {{ fMono }}; font-size: 10.5px; letter-spacing: {{ monoTrack }}; text-transform: {{ monoCase }}; color: var(--muted); padding: 14px 10px 6px;">{{ t.today }}</div>
+          <sc-for list="{{ today }}" as="c" hint-placeholder-count="2">
+            <button onClick="{{ c.onOpen }}" aria-current="{{ c.current }}" style="width: 100%; min-height: 44px; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; padding: 8px 10px; background: {{ c.bg }}; border: none; border-radius: 8px; cursor: pointer; text-align: start;" style-hover="background: var(--raised);">
+              <span dir="auto" style="width: 100%; text-align: {{ alignStart }}; font-size: 14px; color: {{ c.color }}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ c.title }}</span>
+              <span style="font-family: {{ fMono }}; font-size: 10px; letter-spacing: {{ monoTrack }}; text-transform: {{ monoCase }}; color: var(--muted);">{{ c.sub }}</span>
+            </button>
+          </sc-for>
+        </sc-if>
+        <sc-if value="{{ hasEarlier }}" hint-placeholder-val="{{ true }}">
+          <div style="font-family: {{ fMono }}; font-size: 10.5px; letter-spacing: {{ monoTrack }}; text-transform: {{ monoCase }}; color: var(--muted); padding: 18px 10px 6px;">{{ t.earlier }}</div>
+          <sc-for list="{{ earlier }}" as="c" hint-placeholder-count="3">
+            <button onClick="{{ c.onOpen }}" aria-current="{{ c.current }}" style="width: 100%; min-height: 44px; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; padding: 8px 10px; background: {{ c.bg }}; border: none; border-radius: 8px; cursor: pointer; text-align: start;" style-hover="background: var(--raised);">
+              <span dir="auto" style="width: 100%; text-align: {{ alignStart }}; font-size: 14px; color: {{ c.color }}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ c.title }}</span>
+              <span style="font-family: {{ fMono }}; font-size: 10px; letter-spacing: {{ monoTrack }}; text-transform: {{ monoCase }}; color: var(--muted);">{{ c.sub }}</span>
+            </button>
+          </sc-for>
+        </sc-if>
+      </nav>
+      <div style="flex-shrink: 0; padding: 8px; border-top: 1px solid var(--border);">
+        <button onClick="{{ openSettings }}" style="width: 100%; min-height: 52px; display: flex; align-items: center; gap: 10px; padding: 8px; background: transparent; border: none; border-radius: 8px; cursor: pointer; text-align: start;" style-hover="background: var(--card);">
+          <span style="width: 32px; height: 32px; flex-shrink: 0; display: grid; place-items: center; border-radius: 999px; background: var(--raised); border: 1px solid var(--border-strong); color: var(--accent); font-size: 12px; font-weight: 600;">{{ initials }}</span>
+          <span style="flex: 1; min-width: 0; display: flex; flex-direction: column;">
+            <span style="font-size: 14px; font-weight: 500; color: var(--heading);">{{ displayName }}</span>
+            <span dir="ltr" style="font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: start;">{{ userEmail }}</span>
+          </span>
+        </button>
+      </div>
+    </aside>
+  </sc-if>
+
+  <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; position: relative;">
+    <header style="height: {{ m.headH }}; flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 0 {{ m.headPad }}; border-bottom: 1px solid var(--border);">
+      <sc-if value="{{ showMenuBtn }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ openDrawer }}" aria-label="{{ t.chats }}" style="width: 44px; height: 44px; flex-shrink: 0; display: grid; place-items: center; background: transparent; border: none; border-radius: 8px; color: var(--body); cursor: pointer;" style-hover="background: var(--raised);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"></path></svg>
+        </button>
+      </sc-if>
+      <div style="flex: 1; min-width: 0; display: flex; justify-content: {{ m.chipJustify }};">
+        <button onClick="{{ toggleMenu }}" aria-haspopup="dialog" aria-expanded="{{ menuOpen }}" style="height: {{ m.chipH }}; display: flex; align-items: center; gap: 8px; padding: 0 14px; background: var(--raised); border: 1px solid var(--border-strong); border-radius: 999px; color: var(--accent); font-size: 14px; font-weight: 500; cursor: pointer; max-width: 100%;" style-hover="border-color: var(--accent);">
+          <span aria-hidden="true" style="width: 7px; height: 7px; flex-shrink: 0; border-radius: 999px; background: var(--cta);"></span><span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ sName }}</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+        </button>
+      </div>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ newChat }}" aria-label="{{ t.newChat }}" style="width: 44px; height: 44px; flex-shrink: 0; display: grid; place-items: center; background: transparent; border: none; border-radius: 8px; color: var(--body); cursor: pointer;" style-hover="background: var(--raised);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+        </button>
+      </sc-if>
+    </header>
+
+    <div ref="{{ scrollRef }}" style="flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column;">
+      <div style="width: 100%; max-width: 760px; margin: 0 auto; flex: 1; display: flex; flex-direction: column; justify-content: {{ convJustify }}; gap: 32px; padding: {{ m.convPad }};">
+        <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center;">
+            <img src="{{ markSrc }}" alt="" width="44" height="44">
+            <h1 style="margin: 0; font-family: {{ fHead }}; font-weight: 600; font-size: {{ m.emptyTitle }}; line-height: 1.15; letter-spacing: {{ headTrack }}; color: var(--heading);">{{ sName }}</h1>
+          </div>
+        </sc-if>
+        <sc-for list="{{ msgs }}" as="msg" hint-placeholder-count="0">
+          <sc-if value="{{ msg.isUser }}">
+            <div style="display: flex; justify-content: flex-start;">
+              <div dir="auto" style="text-align: {{ alignStart }}; max-width: {{ m.bubbleMax }}; padding: 12px 16px; background: var(--raised); border: 1px solid var(--border); border-radius: 12px; color: var(--heading); font-size: 16px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere;">{{ msg.text }}</div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ msg.isAi }}">
+            <article aria-live="polite" style="display: flex; gap: 14px; align-items: flex-start;">
+              <div style="width: 24px; height: 24px; flex-shrink: 0; margin-top: 3px;">{{ msg.mark }}</div>
+              <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 14px;">
+                <sc-if value="{{ msg.thinking }}">
+                  <p role="status" style="margin: 0; font-size: 15px; line-height: 1.7; color: var(--muted);">{{ msg.thinkingText }}</p>
+                </sc-if>
+                <sc-for list="{{ msg.blocks }}" as="b">
+                  <sc-if value="{{ b.isP }}">
+                    <p dir="auto" style="margin: 0; font-size: 16px; line-height: 1.7; color: var(--body); text-wrap: pretty; text-align: {{ alignStart }};">{{ b.x }}</p>
+                  </sc-if>
+                  <sc-if value="{{ b.isUl }}">
+                    <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px;">
+                      <sc-for list="{{ b.items }}" as="it">
+                        <li style="display: flex; gap: 12px; font-size: 16px; line-height: 1.7; color: var(--body);"><span aria-hidden="true" style="width: 5px; height: 5px; flex-shrink: 0; margin-top: 11px; border-radius: 999px; background: var(--accent);"></span><span dir="auto" style="text-wrap: pretty; text-align: {{ alignStart }};">{{ it.x }}</span></li>
+                      </sc-for>
+                    </ul>
+                  </sc-if>
+                  <sc-if value="{{ b.isOl }}">
+                    <ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px;">
+                      <sc-for list="{{ b.items }}" as="it">
+                        <li style="display: flex; gap: 12px; font-size: 16px; line-height: 1.7; color: var(--body);"><span aria-hidden="true" style="min-width: 20px; flex-shrink: 0; font-family: 'IBM Plex Mono', monospace; font-size: 13px; line-height: 27px; color: var(--accent);">{{ it.n }}</span><span dir="auto" style="text-wrap: pretty; text-align: {{ alignStart }};">{{ it.x }}</span></li>
+                      </sc-for>
+                    </ol>
+                  </sc-if>
+                  <sc-if value="{{ b.isTable }}">
+                    <div style="overflow-x: auto; border: 1px solid var(--border); border-radius: 12px;">
+                      <table style="width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.5;">
+                        <thead><tr>
+                          <sc-for list="{{ b.head }}" as="h"><th scope="col" style="padding: 10px 14px; background: var(--card); text-align: start; font-family: {{ fMono }}; font-weight: 400; font-size: 10.5px; letter-spacing: {{ monoTrack }}; text-transform: {{ monoCase }}; color: var(--muted); border-bottom: 1px solid var(--border); white-space: nowrap;">{{ h }}</th></sc-for>
+                        </tr></thead>
+                        <tbody>
+                          <sc-for list="{{ b.rows }}" as="r"><tr>
+                            <sc-for list="{{ r.cells }}" as="cell"><td dir="auto" style="padding: 10px 14px; text-align: {{ alignStart }}; color: var(--body); border-top: 1px solid var(--border); vertical-align: top;">{{ cell }}</td></sc-for>
+                          </tr></sc-for>
+                        </tbody>
+                      </table>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ b.isFormula }}">
+                    <div style="padding: 16px 20px; background: var(--card); border: 1px solid var(--border); border-radius: 12px;">
+                      <div dir="{{ b.dir }}" style="font-family: 'Source Serif 4', 'IBM Plex Sans Arabic', Georgia, serif; font-style: {{ b.fstyle }}; font-size: {{ b.fsize }}; line-height: 1.4; color: var(--heading); text-align: start;">{{ b.x }}</div>
+                      <sc-if value="{{ b.hasWhere }}">
+                        <dl style="margin: 14px 0 0; padding-top: 12px; border-top: 1px solid var(--border); display: grid; grid-template-columns: auto minmax(0,1fr); gap: 6px 18px; align-items: baseline;">
+                          <sc-for list="{{ b.where }}" as="wv">
+                            <dt style="font-family: 'Source Serif 4', Georgia, serif; font-style: italic; font-size: 18px; color: var(--accent);">{{ wv.k }}</dt>
+                            <dd style="margin: 0; font-size: 14px; color: var(--body);">{{ wv.v }}</dd>
+                          </sc-for>
+                        </dl>
+                      </sc-if>
+                    </div>
+                  </sc-if>
+                </sc-for>
+                <sc-if value="{{ msg.isOutside }}">
+                  <p style="margin: 0; font-size: 16px; line-height: 1.7; color: var(--body);">{{ msg.out1 }}</p>
+                  <p style="margin: 0; font-size: 16px; line-height: 1.7; color: var(--body);">{{ msg.out2 }}</p>
+                  <div style="padding-top: 12px; border-top: 1px solid var(--border); font-family: {{ fMono }}; font-size: {{ citeSize }}; letter-spacing: {{ monoTrack }}; text-transform: {{ monoCase }}; color: var(--muted);">{{ t.notIn }}</div>
+                </sc-if>
+                <sc-if value="{{ msg.isError }}">
+                  <div role="alert" style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px 12px 12px 16px; padding-inline: 16px 12px; background: var(--warn-bg); border: 1px solid var(--warn-border); border-radius: 12px;">
+                    <span style="flex: 1; min-width: 160px; font-size: 15px; color: var(--warn-text);">{{ t.errorMsg }}</span>
+                    <button onClick="{{ msg.onRetry }}" style="min-height: {{ m.tap }}; display: flex; align-items: center; gap: 8px; padding: 0 14px; background: transparent; border: 1px solid var(--warn-border); border-radius: 8px; color: var(--warn-text); font-size: 14px; font-weight: 500; cursor: pointer;" style-hover="border-color: var(--warn-text);">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                      <span>{{ t.retry }}</span>
+                    </button>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ msg.hasCites }}">
+                  <div style="display: flex; flex-direction: column; align-items: flex-start; padding-top: 6px; border-top: 1px solid var(--border);">
+                    <sc-for list="{{ msg.cites }}" as="c">
+                      <button onClick="{{ c.onOpen }}" aria-pressed="{{ c.active }}" aria-label="{{ c.aria }}" style="min-height: {{ m.citeH }}; display: flex; align-items: center; gap: 8px; padding: 0 8px; margin-inline-start: -8px; background: {{ c.bg }}; border: none; border-radius: 8px; color: var(--accent); font-family: {{ fMono }}; font-size: {{ citeSize }}; letter-spacing: {{ monoTrack }}; text-transform: {{ monoCase }}; text-align: start; cursor: pointer;" style-hover="background: var(--raised);">
+                        <bdi>{{ c.label }}</bdi>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{ flip }};"><path d="m9 18 6-6-6-6"></path></svg>
+                      </button>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ msg.showFb }}">
+                  <div style="display: flex; gap: 2px; margin-inline-start: -8px; margin-top: -6px;">
+                    <button onClick="{{ msg.onUp }}" aria-label="{{ t.helpful }}" aria-pressed="{{ msg.up }}" style="width: {{ m.tap }}; height: {{ m.tap }}; display: grid; place-items: center; background: transparent; border: none; border-radius: 8px; color: {{ msg.upColor }}; cursor: pointer;" style-hover="background: var(--raised);">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="{{ msg.upFill }}" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10v12"></path><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"></path></svg>
+                    </button>
+                    <button onClick="{{ msg.onDown }}" aria-label="{{ t.notHelpful }}" aria-pressed="{{ msg.down }}" style="width: {{ m.tap }}; height: {{ m.tap }}; display: grid; place-items: center; background: transparent; border: none; border-radius: 8px; color: {{ msg.downColor }}; cursor: pointer;" style-hover="background: var(--raised);">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="{{ msg.downFill }}" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 14V2"></path><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z"></path></svg>
+                    </button>
+                  </div>
+                </sc-if>
+              </div>
+            </article>
+          </sc-if>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="flex-shrink: 0; padding: 0 {{ m.composerPad }} {{ m.composerBottom }};">
+      <div style="max-width: 760px; margin: 0 auto;">
+        <div style="display: flex; align-items: flex-end; gap: 8px; padding: 8px; padding-inline-start: 16px; background: var(--card); border: 1px solid {{ composerBorder }}; border-radius: 12px;">
+          <textarea ref="{{ taRef }}" rows="1" value="{{ draft }}" onChange="{{ onDraft }}" onKeyDown="{{ onKey }}" onFocus="{{ onFocus }}" onBlur="{{ onBlur }}" placeholder="{{ placeholder }}" aria-label="{{ placeholder }}" style="flex: 1; min-width: 0; max-height: 168px; padding: 9px 0; resize: none; background: transparent; border: none; outline: none; color: var(--heading); font-family: inherit; font-size: 16px; line-height: 1.5;"></textarea>
+          <button onClick="{{ onSend }}" disabled="{{ sendDisabled }}" aria-label="{{ t.send }}" style="width: {{ m.sendSize }}; height: {{ m.sendSize }}; flex-shrink: 0; display: grid; place-items: center; background: {{ sendBg }}; border: none; border-radius: 8px; color: {{ sendColor }}; cursor: {{ sendCursor }};">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path></svg>
+          </button>
+        </div>
+        <p style="margin: 8px 0 0; text-align: center; font-size: 12px; line-height: 1.5; color: var(--muted);">{{ t.disclaimer }}</p>
+      </div>
+    </div>
+
+    <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="flex: 1; padding: 20px {{ m.composerPad }} 24px;">
+        <div style="max-width: 760px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
+          <sc-for list="{{ chips }}" as="q" hint-placeholder-count="3">
+            <button onClick="{{ q.onAsk }}" dir="auto" style="min-height: 44px; padding: 10px 18px; background: var(--card); border: 1px solid var(--border); border-radius: 999px; color: var(--body); font-size: 14px; line-height: 1.4; cursor: pointer; text-align: start;" style-hover="background: var(--raised); border-color: var(--border-strong); color: var(--heading);">{{ q.q }}</button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+
+  <sc-if value="{{ showSrcScrim }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeSource }}" style="position: absolute; inset: 0; z-index: 29; background: var(--scrim);"></div>
+  </sc-if>
+  <sc-if value="{{ srcOpen }}" hint-placeholder-val="{{ false }}">
+    <aside role="complementary" aria-label="{{ t.source }}" style="position: {{ src.pos }}; top: {{ src.top }}; bottom: {{ src.bottom }}; inset-inline-end: 0; z-index: {{ src.z }}; width: {{ src.w }}; height: {{ src.h }}; max-height: {{ src.maxH }}; flex-shrink: 0; display: flex; flex-direction: column; background: var(--panel); border-inline-start: {{ src.bStart }}; border-top: {{ src.bTop }}; border-radius: {{ src.radius }};">
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <div aria-hidden="true" style="display: flex; justify-content: center; padding-top: 8px;"><span style="width: 40px; height: 4px; border-radius: 999px; background: var(--border-strong);"></span></div>
+      </sc-if>
+      <div style="min-height: 56px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-inline: 20px 8px; border-bottom: 1px solid var(--border);">
+        <span style="font-family: {{ fMono }}; font-size: 11px; letter-spacing: {{ monoTrack }}; text-transform: {{ monoCase }}; color: var(--accent);">{{ t.source }}</span>
+        <button onClick="{{ closeSource }}" aria-label="{{ t.close }}" style="width: 44px; height: 44px; display: grid; place-items: center; background: transparent; border: none; border-radius: 8px; color: var(--muted); cursor: pointer;" style-hover="background: var(--raised); color: var(--heading);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      <div style="flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; padding: 22px 20px 32px;">
+        <h2 style="margin: 0; font-family: {{ fHead }}; font-weight: 600; font-size: 24px; line-height: 1.2; letter-spacing: {{ headTrack }}; color: var(--heading);">{{ src.doc }}</h2>
+        <dl style="margin: 0; display: grid; grid-template-columns: auto minmax(0,1fr); gap: 10px 20px; align-items: baseline;">
+          <dt style="font-family: {{ fMono }}; font-size: 10.5px; letter-spacing: {{ monoTrack }}; text-transform: {{ monoCase }}; color: var(--muted);">{{ t.topic }}</dt>
+          <dd dir="ltr" style="margin: 0; font-size: 15px; color: var(--heading); text-align: {{ alignStart }};">{{ src.topic }}</dd>
+          <dt style="font-family: {{ fMono }}; font-size: 10.5px; letter-spacing: {{ monoTrack }}; text-transform: {{ monoCase }}; color: var(--muted);">{{ t.page }}</dt>
+          <dd style="margin: 0; font-size: 15px; color: var(--heading);">{{ src.page }}</dd>
+        </dl>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <span style="font-family: {{ fMono }}; font-size: 10.5px; letter-spacing: {{ monoTrack }}; text-transform: {{ monoCase }}; color: var(--muted);">{{ t.excerpt }}</span>
+          <div lang="en" dir="ltr" style="display: flex; flex-direction: column; gap: 10px; padding: 18px 20px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; font-family: 'IBM Plex Sans', sans-serif; text-align: left;">
+            <p style="margin: 0; font-size: 14px; font-weight: 600; line-height: 1.5; color: var(--heading);">{{ src.heading }}</p>
+            <sc-for list="{{ src.lines }}" as="ln">
+              <sc-if value="{{ ln.hl }}"><p style="margin: 0; font-size: 15px; line-height: 1.75; color: var(--heading);"><mark style="padding: 2px 3px; background: var(--hl); color: var(--heading); border-radius: 2px; box-shadow: inset 0 -2px 0 var(--cta); box-decoration-break: clone;">{{ ln.x }}</mark></p></sc-if>
+              <sc-if value="{{ ln.plain }}"><p style="margin: 0; font-size: 15px; line-height: 1.75; color: var(--muted);">{{ ln.x }}</p></sc-if>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </sc-if>
+
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeMenu }}" style="position: absolute; inset: 0; z-index: 49; background: {{ menu.scrim }};"></div>
+    <div role="dialog" aria-label="{{ t.subjectAria }}" style="position: absolute; z-index: 50; top: {{ menu.top }}; inset-inline-start: {{ menu.start }}; width: {{ menu.w }}; max-height: {{ menu.maxH }}; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; padding: 8px; background: var(--card); border: 1px solid var(--border); border-radius: {{ menu.radius }};">
+      <div style="min-height: 40px; display: flex; align-items: center; justify-content: space-between; padding-inline: 10px 2px;">
+        <span style="font-family: {{ fMono }}; font-size: 10.5px; letter-spacing: {{ monoTrack }}; text-transform: {{ monoCase }}; color: var(--muted);">{{ t.subject }}</span>
+        <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ closeMenu }}" aria-label="{{ t.close }}" style="width: 44px; height: 44px; display: grid; place-items: center; background: transparent; border: none; border-radius: 8px; color: var(--muted); cursor: pointer;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+          </button>
+        </sc-if>
+      </div>
+      <sc-for list="{{ subjects }}" as="s" hint-placeholder-count="10">
+        <button onClick="{{ s.onSwitch }}" aria-current="{{ s.current }}" style="width: 100%; min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 12px; background: {{ s.bg }}; border: none; border-radius: 8px; color: {{ s.color }}; font-size: 15px; cursor: pointer; text-align: start;" style-hover="background: var(--raised);">
+          <span>{{ s.name }}</span>
+          <sc-if value="{{ s.current }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></sc-if>
+        </button>
+      </sc-for>
+      <p style="margin: 6px 12px 4px; font-size: 12px; color: var(--muted);">{{ t.switchNote }}</p>
+    </div>
+  </sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ settingsOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ settingsBg }}" style="position: absolute; inset: 0; z-index: 60; display: flex; align-items: {{ m.modalAlign }}; justify-content: center; padding: {{ m.modalPad }}; background: var(--scrim);">
+    <div role="dialog" aria-modal="true" aria-label="{{ t.settings }}" style="width: 100%; max-width: 440px; display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--border); border-radius: 12px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 8px 12px 24px; padding-inline: 24px 8px; border-bottom: 1px solid var(--border);">
+        <h2 style="margin: 0; font-family: {{ fHead }}; font-weight: 600; font-size: 24px; letter-spacing: {{ headTrack }}; color: var(--heading);">{{ t.settings }}</h2>
+        <button onClick="{{ closeSettings }}" aria-label="{{ t.close }}" style="width: 44px; height: 44px; display: grid; place-items: center; background: transparent; border: none; border-radius: 8px; color: var(--muted); cursor: pointer;" style-hover="background: var(--raised); color: var(--heading);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px; padding: 20px 24px; border-bottom: 1px solid var(--border);">
+        <span style="font-family: {{ fMono }}; font-size: 10.5px; letter-spacing: {{ monoTrack }}; text-transform: {{ monoCase }}; color: var(--muted);">{{ t.language }}</span>
+        <div role="radiogroup" aria-label="{{ t.language }}" style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <button role="radio" aria-checked="{{ isEn }}" onClick="{{ setEn }}" lang="en" style="min-height: 44px; padding: 0 18px; background: {{ enBg }}; border: 1px solid {{ enBorder }}; border-radius: 999px; color: {{ enColor }}; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; cursor: pointer;">English</button>
+          <button role="radio" aria-checked="{{ isAr }}" onClick="{{ setAr }}" lang="ar" style="min-height: 44px; padding: 0 18px; background: {{ arBg }}; border: 1px solid {{ arBorder }}; border-radius: 999px; color: {{ arColor }}; font-family: 'IBM Plex Sans Arabic', sans-serif; font-size: 15px; cursor: pointer;">العربية</button>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px; padding: 20px 24px; border-bottom: 1px solid var(--border);">
+        <span style="font-family: {{ fMono }}; font-size: 10.5px; letter-spacing: {{ monoTrack }}; text-transform: {{ monoCase }}; color: var(--muted);">{{ t.appearance }}</span>
+        <div role="radiogroup" aria-label="{{ t.appearance }}" style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <button role="radio" aria-checked="{{ isDarkT }}" onClick="{{ setDark }}" style="min-height: 44px; padding: 0 18px; background: {{ dkBg }}; border: 1px solid {{ dkBorder }}; border-radius: 999px; color: {{ dkColor }}; font-size: 15px; cursor: pointer;">{{ t.dark }}</button>
+          <button role="radio" aria-checked="{{ isLightT }}" onClick="{{ setLight }}" style="min-height: 44px; padding: 0 18px; background: {{ ltBg }}; border: 1px solid {{ ltBorder }}; border-radius: 999px; color: {{ ltColor }}; font-size: 15px; cursor: pointer;">{{ t.light }}</button>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 14px; padding: 20px 24px 24px;">
+        <span style="font-family: {{ fMono }}; font-size: 10.5px; letter-spacing: {{ monoTrack }}; text-transform: {{ monoCase }}; color: var(--muted);">{{ t.account }}</span>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="width: 40px; height: 40px; flex-shrink: 0; display: grid; place-items: center; border-radius: 999px; background: var(--raised); border: 1px solid var(--border-strong); color: var(--accent); font-size: 14px; font-weight: 600;">{{ initials }}</span>
+          <span style="display: flex; flex-direction: column; min-width: 0;">
+            <span style="font-size: 15px; font-weight: 500; color: var(--heading);">{{ displayName }}</span>
+            <span dir="ltr" style="font-size: 13px; color: var(--muted); text-align: start;">{{ userEmail }}</span>
+          </span>
+        </div>
+        <button onClick="{{ signOut }}" style="align-self: flex-start; min-height: 44px; padding: 0 18px; background: transparent; border: 1px solid var(--border); border-radius: 8px; color: var(--heading); font-size: 15px; font-weight: 500; cursor: pointer;" style-hover="background: var(--raised); border-color: var(--border-strong);">{{ t.signOut }}</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;],&quot;default&quot;:&quot;dark&quot;,&quot;tsType&quot;:&quot;'dark'|'light'&quot;},&quot;lang&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;en&quot;,&quot;ar&quot;],&quot;default&quot;:&quot;en&quot;,&quot;tsType&quot;:&quot;'en'|'ar'&quot;},&quot;screen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;landing&quot;,&quot;auth&quot;,&quot;subjects&quot;,&quot;chat&quot;],&quot;default&quot;:&quot;landing&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;preset&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;empty&quot;,&quot;thinking&quot;,&quot;one&quot;,&quot;two&quot;,&quot;formula&quot;,&quot;table&quot;,&quot;outside&quot;,&quot;error&quot;,&quot;long&quot;,&quot;signedout&quot;],&quot;default&quot;:&quot;empty&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Chat state (when screen = chat)&quot;},&quot;subject&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;math&quot;,&quot;phys&quot;,&quot;chem&quot;,&quot;bio&quot;,&quot;econ&quot;,&quot;bus&quot;,&quot;eng&quot;,&quot;cs&quot;,&quot;geo&quot;,&quot;hist&quot;],&quot;default&quot;:&quot;econ&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Chat state (when screen = chat)&quot;},&quot;sourceOpen&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Chat state (when screen = chat)&quot;},&quot;collapsed&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Chat state (when screen = chat)&quot;},&quot;settingsOpen&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;boolean&quot;},&quot;drawerOpen&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;boolean&quot;},&quot;subjectMenu&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;boolean&quot;},&quot;authMode&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;string&quot;},&quot;sourceIdx&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;number&quot;},&quot;frameH&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;string&quot;},&quot;frameW&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;number&quot;}}">
+const SUBJ = [
+  { id: 'math', en: 'Mathematics', ar: 'الرياضيات' },
+  { id: 'phys', en: 'Physics', ar: 'الفيزياء' },
+  { id: 'chem', en: 'Chemistry', ar: 'الكيمياء' },
+  { id: 'bio', en: 'Biology', ar: 'الأحياء' },
+  { id: 'econ', en: 'Economics', ar: 'الاقتصاد' },
+  { id: 'bus', en: 'Business Studies', ar: 'دراسات الأعمال' },
+  { id: 'eng', en: 'English', ar: 'اللغة الإنجليزية' },
+  { id: 'cs', en: 'Computer Science', ar: 'علوم الحاسوب' },
+  { id: 'geo', en: 'Geography', ar: 'الجغرافيا' },
+  { id: 'hist', en: 'History', ar: 'التاريخ' }
+];
+const sname = (id, L) => { const s = SUBJ.find(x => x.id === id); return s ? s[L] : id; };
+
+const T = {
+  en: {
+    signIn: 'Sign in', signUp: 'Create account', eyebrow: 'IGCSE study assistant', headline: 'Ask anything in your syllabus.',
+    startAsking: 'Start asking', s1: 'Answers come only from the syllabus.', s2: 'Every answer shows its source.', s3: "If it isn't in the syllabus, Madar AI says so.",
+    subjects: 'Subjects', footer1: 'Not affiliated with any exam board.', footer2: 'A Madar product',
+    firstName: 'First name (optional)', email: 'Email', password: 'Password', forgot: 'Forgot password?',
+    newHere: 'New to Madar AI?', haveAcc: 'Already have an account?',
+    signedOut: "You've been signed out. Sign in to continue.", errEmail: 'Enter a valid email address.', errPw: 'Enter your password.', errPwLen: 'Use at least 8 characters.',
+    chooseSubject: 'Choose a subject', newChat: 'New chat', subject: 'Subject', subjectAria: 'Switch subject', today: 'Today', earlier: 'Earlier', chats: 'Chats',
+    collapse: 'Collapse sidebar', expand: 'Expand sidebar', closeMenu: 'Close',
+    askAbout: 'Ask about {s}', disclaimer: 'Madar AI can make mistakes. Check the source.', send: 'Send',
+    checking: 'Checking the {s} syllabus', source: 'Source', syllabus: '{s} syllabus', topic: 'Topic', page: 'Page', excerpt: 'Excerpt', close: 'Close',
+    notIn: 'Not in the syllabus', out1: "That isn't covered in the {s} syllabus I have.", out2: 'Try a question about a topic in the syllabus.',
+    errorMsg: "The answer didn't load.", retry: 'Retry', helpful: 'Helpful', notHelpful: 'Not helpful',
+    settings: 'Settings', appearance: 'Appearance', dark: 'Dark', light: 'Light', language: 'Language', account: 'Account', signOut: 'Sign out', switchNote: 'Switching subject starts a new chat.', openSource: 'Open source: '
+  },
+  ar: {
+    signIn: 'تسجيل الدخول', signUp: 'إنشاء حساب', eyebrow: 'مساعد دراسة IGCSE', headline: 'اسأل عن أي شيء في منهجك.',
+    startAsking: 'ابدأ بالسؤال', s1: 'الإجابات من المنهج فقط.', s2: 'كل إجابة تُظهر مصدرها.', s3: 'إن لم يكن في المنهج، يخبرك Madar AI بذلك.',
+    subjects: 'المواد', footer1: 'غير تابع لأي هيئة امتحانات.', footer2: 'من منتجات Madar',
+    firstName: 'الاسم الأول (اختياري)', email: 'البريد الإلكتروني', password: 'كلمة المرور', forgot: 'نسيت كلمة المرور؟',
+    newHere: 'جديد على Madar AI؟', haveAcc: 'لديك حساب؟',
+    signedOut: 'تم تسجيل خروجك. سجّل الدخول للمتابعة.', errEmail: 'أدخل بريدًا إلكترونيًا صحيحًا.', errPw: 'أدخل كلمة المرور.', errPwLen: 'استخدم 8 أحرف على الأقل.',
+    chooseSubject: 'اختر مادة', newChat: 'محادثة جديدة', subject: 'المادة', subjectAria: 'تغيير المادة', today: 'اليوم', earlier: 'سابقًا', chats: 'المحادثات',
+    collapse: 'طي الشريط الجانبي', expand: 'توسيع الشريط الجانبي', closeMenu: 'إغلاق',
+    askAbout: 'اسأل عن {s}', disclaimer: 'قد يخطئ Madar AI. تحقّق من المصدر.', send: 'إرسال',
+    checking: 'جارٍ البحث في منهج {s}', source: 'المصدر', syllabus: 'منهج {s}', topic: 'الموضوع', page: 'الصفحة', excerpt: 'مقتطف', close: 'إغلاق',
+    notIn: 'غير موجود في المنهج', out1: 'هذا الموضوع غير موجود في منهج {s} المتوفر لدي.', out2: 'جرّب سؤالًا عن موضوع من المنهج.',
+    errorMsg: 'لم تُحمَّل الإجابة.', retry: 'إعادة المحاولة', helpful: 'مفيد', notHelpful: 'غير مفيد',
+    settings: 'الإعدادات', appearance: 'المظهر', dark: 'داكن', light: 'فاتح', language: 'اللغة', account: 'الحساب', signOut: 'تسجيل الخروج', switchNote: 'تغيير المادة يبدأ محادثة جديدة.', openSource: 'فتح المصدر: '
+  }
+};
+
+const C = {
+  infl: { s: 'econ', topic: '2.3', title: 'Inflation and deflation', page: 12, lines: [
+    ['Candidates should be able to:', 0],
+    ['Define inflation as a sustained rise in the general price level, and deflation as a sustained fall in the general price level.', 1],
+    ['Describe how a consumer prices index (CPI) is used to measure inflation.', 1],
+    ['Explain the causes of inflation: demand-pull and cost-push.', 0],
+    ['Discuss the consequences of inflation for consumers, workers, savers, lenders and firms.', 0]] },
+  inflCause: { s: 'econ', topic: '2.3', title: 'Inflation and deflation', page: 12, lines: [
+    ['Candidates should be able to:', 0],
+    ['Define inflation as a sustained rise in the general price level.', 0],
+    ['Explain the causes of inflation: demand-pull and cost-push.', 1],
+    ['Discuss the consequences of inflation for consumers, workers, savers, lenders and firms.', 0]] },
+  mon: { s: 'econ', topic: '2.5', title: 'Monetary policy', page: 14, lines: [
+    ['Candidates should be able to:', 0],
+    ['Define monetary policy as changes in interest rates, the money supply and foreign exchange rates.', 0],
+    ['Analyse how changes in interest rates affect consumer spending, borrowing and saving.', 1]] },
+  ped: { s: 'econ', topic: '3.4', title: 'Price elasticity of demand', page: 16, lines: [
+    ['Candidates should be able to:', 0],
+    ['Define price elasticity of demand (PED).', 0],
+    ['Calculate PED using the formula: percentage change in quantity demanded divided by percentage change in price.', 1],
+    ['Interpret PED values and explain the relationship between PED and total spending on a product.', 1]] },
+  vel: { s: 'phys', topic: '1.2', title: 'Motion', page: 8, lines: [
+    ['Candidates should be able to:', 0],
+    ['Define acceleration as change in velocity per unit time.', 0],
+    ['Recall and use the equation acceleration = change in velocity ÷ time taken, a = Δv / Δt.', 1],
+    ['Draw, plot and interpret speed–time graphs.', 0]] },
+  osm: { s: 'bio', topic: '3.2', title: 'Osmosis', page: 15, lines: [
+    ['Candidates should be able to:', 0],
+    ['Describe the role of water as a solvent in organisms.', 0],
+    ['Describe osmosis as the net movement of water molecules from a region of higher water potential to a region of lower water potential, through a partially permeable membrane.', 1],
+    ['Explain the effects on plant tissues of immersing them in solutions of different concentrations, using the terms turgid, turgor pressure, plasmolysis and flaccid.', 1]] },
+  bal: { s: 'chem', topic: '3.1', title: 'Formulae and equations', page: 9, lines: [
+    ['Candidates should be able to:', 0],
+    ['State the formulae of the elements and compounds named in the syllabus.', 0],
+    ['Write word equations and symbol equations, including state symbols, from information given.', 1],
+    ['Deduce the balanced equation for a chemical reaction.', 1]] }
+};
+
+const ANS = {
+  infl: { blocks: [
+    { t: 'p', x: 'Inflation is a sustained rise in the general price level in an economy over time.' },
+    { t: 'p', x: 'When prices rise, each unit of money buys fewer goods and services. This is a fall in the purchasing power of money.' },
+    { t: 'p', x: 'It is usually measured with a consumer prices index (CPI), which tracks the price of a typical basket of goods bought by households.' }
+  ], cites: [C.infl] },
+  causes: { blocks: [
+    { t: 'p', x: 'From Topic 2.3, inflation has two main causes.' },
+    { t: 'ul', items: [
+      'Demand-pull: total demand grows faster than the economy can produce goods and services, so prices are pulled up.',
+      'Cost-push: firms\u2019 costs rise, for example wages or imported raw materials, and firms pass them on as higher prices.'] },
+    { t: 'p', x: 'From Topic 2.5, a fall in interest rates can add to demand-pull inflation. Borrowing becomes cheaper, so households spend more.' }
+  ], cites: [C.inflCause, C.mon] },
+  ped: { blocks: [
+    { t: 'p', x: 'Price elasticity of demand (PED) measures how much the quantity demanded responds to a change in price.' },
+    { t: 'f', x: 'PED = % change in quantity demanded \u00f7 % change in price', plain: true },
+    { t: 'p', x: 'Example: the price rises by 10% and quantity demanded falls by 20%. PED = \u221220 \u00f7 10 = \u22122, so demand is price elastic.' },
+    { t: 'table', head: ['PED, ignoring the sign', 'Demand is', 'If price rises, total revenue'], rows: [
+      ['Greater than 1', 'Price elastic', 'Falls'], ['Less than 1', 'Price inelastic', 'Rises'], ['Equal to 1', 'Unitary', 'Stays the same']] }
+  ], cites: [C.ped] },
+  vel: { blocks: [
+    { t: 'p', x: 'Use this equation when acceleration is constant. It comes from rearranging a = (v \u2212 u) \u00f7 t.' },
+    { t: 'f', x: 'v = u + at', where: [['v', 'final velocity, in m/s'], ['u', 'initial velocity, in m/s'], ['a', 'acceleration, in m/s\u00b2'], ['t', 'time taken, in s']] },
+    { t: 'p', x: 'Example: a cyclist moving at 4 m/s accelerates at 2 m/s\u00b2 for 3 s. v = 4 + (2 \u00d7 3) = 10 m/s.' }
+  ], cites: [C.vel] },
+  osmosis: { blocks: [
+    { t: 'p', x: 'Osmosis is the net movement of water molecules from a region of higher water potential (a dilute solution) to a region of lower water potential (a concentrated solution), through a partially permeable membrane.' },
+    { t: 'p', x: 'In a plant cell, the cell membrane is partially permeable and the cell wall is fully permeable. The cell wall is strong, so it stops the cell from bursting.' },
+    { t: 'p', x: 'What happens depends on the solution around the cell:' },
+    { t: 'table', head: ['Solution outside', 'Water moves', 'The cell becomes'], rows: [
+      ['More dilute than the cell sap', 'Into the cell', 'Turgid'], ['Same water potential', 'No net movement', 'No change'], ['More concentrated than the cell sap', 'Out of the cell', 'Flaccid, then plasmolysed']] },
+    { t: 'p', x: 'Turgid cells press against each other. This turgor pressure supports the stem and leaves and keeps the plant upright.' },
+    { t: 'p', x: 'When a plant loses too much water, its cells become flaccid and the plant wilts. If water keeps leaving, the cell membrane pulls away from the cell wall. This is plasmolysis.' },
+    { t: 'ul', items: ['Turgid: the cell is full of water and the membrane presses against the wall.', 'Flaccid: the cell has lost water and is soft.', 'Plasmolysed: the membrane has pulled away from the wall.'] },
+    { t: 'p', x: 'When you explain osmosis, state the direction water moves and name the partially permeable membrane.' }
+  ], cites: [C.osm] },
+  balance: { blocks: [
+    { t: 'p', x: 'Balance an equation by changing the numbers in front of formulas. Never change the formulas themselves.' },
+    { t: 'ol', items: ['Write the unbalanced equation: H\u2082 + O\u2082 \u2192 H\u2082O', 'Count the atoms of each element on both sides.', 'Add numbers in front of formulas until each element balances: 2H\u2082 + O\u2082 \u2192 2H\u2082O', 'Check: 4 hydrogen atoms and 2 oxygen atoms on each side.'] }
+  ], cites: [C.bal] }
+};
+
+const ANS_AR = {
+  infl: { blocks: [
+    { t: 'p', x: 'التضخم هو ارتفاع مستمر في المستوى العام للأسعار في الاقتصاد مع مرور الوقت.' },
+    { t: 'p', x: 'عندما ترتفع الأسعار، تشتري كل وحدة من المال سلعًا وخدمات أقل. وهذا انخفاض في القوة الشرائية للنقود.' },
+    { t: 'p', x: 'يُقاس عادةً بمؤشر أسعار المستهلك، الذي يتتبّع سعر سلة نموذجية من السلع التي تشتريها الأسر.' }
+  ], cites: [C.infl] },
+  causes: { blocks: [
+    { t: 'p', x: 'من الموضوع 2.3، للتضخم سببان رئيسيان.' },
+    { t: 'ul', items: ['التضخم الناتج عن الطلب: ينمو الطلب الكلي أسرع من قدرة الاقتصاد على الإنتاج، فترتفع الأسعار.', 'التضخم الناتج عن التكاليف: ترتفع تكاليف الشركات، مثل الأجور أو المواد الخام المستوردة، فتنقلها إلى الأسعار.'] },
+    { t: 'p', x: 'من الموضوع 2.5، قد يزيد خفض أسعار الفائدة من التضخم الناتج عن الطلب، لأن الاقتراض يصبح أرخص فتنفق الأسر أكثر.' }
+  ], cites: [C.inflCause, C.mon] },
+  ped: { blocks: [
+    { t: 'p', x: 'تقيس مرونة الطلب السعرية مدى استجابة الكمية المطلوبة لتغيّر السعر.' },
+    { t: 'f', x: 'PED = % التغيّر في الكمية المطلوبة \u00f7 % التغيّر في السعر', plain: true, rtl: true },
+    { t: 'table', head: ['القيمة', 'الطلب', 'عند رفع السعر، الإيراد الكلي'], rows: [['أكبر من 1', 'مرن', 'ينخفض'], ['أقل من 1', 'غير مرن', 'يرتفع'], ['تساوي 1', 'متكافئ', 'لا يتغيّر']] }
+  ], cites: [C.ped] }
+};
+
+const QUICK = {
+  math: [
+    ['How do I solve a quadratic by factorising?', 'Rearrange so one side is 0, factorise into two brackets, then set each bracket equal to 0. For x\u00b2 + 5x + 6 = 0, (x + 2)(x + 3) = 0, so x = \u22122 or x = \u22123.', '2.10', 'Equations', 9, 'Solve quadratic equations by factorisation, completing the square and by use of the formula.'],
+    ['What is the sine rule?', 'The sine rule links each side of a triangle to the sine of its opposite angle: a / sin A = b / sin B = c / sin C. Use it when you know a side and its opposite angle.', '6.6', 'Non-right-angled triangles', 21, 'Use the sine and cosine rules in any triangle.'],
+    ['How do I find the gradient of a line?', 'Gradient is the change in y divided by the change in x between two points on the line. For (1, 2) and (3, 8), the gradient is (8 \u2212 2) \u00f7 (3 \u2212 1) = 3.', '3.3', 'Gradient of linear graphs', 13, 'Calculate the gradient of a straight line from the coordinates of two points on it.']],
+  phys: [
+    ['What is the difference between speed and velocity?', 'Speed is how fast an object moves. Velocity is speed in a stated direction, so it is a vector quantity.', '1.2', 'Motion', 8, 'Know that velocity is speed in a given direction.'],
+    ["What is Newton's second law?", 'The resultant force on an object equals its mass multiplied by its acceleration: F = ma. A larger force gives a larger acceleration for the same mass.', '1.5', 'Effects of forces', 10, 'Recall and use the equation F = ma.']],
+  chem: [
+    ['What is an isotope?', 'Isotopes are atoms of the same element with the same number of protons but a different number of neutrons. They react in the same way because they have the same electronic configuration.', '2.3', 'Isotopes', 7, 'Define isotopes as different atoms of the same element that have the same number of protons but different numbers of neutrons.'],
+    ['What happens during electrolysis?', 'Electrolysis breaks down an ionic compound, molten or in solution, by passing an electric current through it. Positive ions move to the cathode and negative ions move to the anode.', '4.1', 'Electrolysis', 11, 'Define electrolysis as the decomposition of an ionic compound, when molten or in aqueous solution, by the passage of an electric current.']],
+  bio: [
+    ['What does an enzyme do?', 'An enzyme is a protein that acts as a biological catalyst. It speeds up a chemical reaction without being changed by the reaction.', '5.1', 'Enzymes', 17, 'Describe enzymes as proteins that are involved in all metabolic reactions, where they function as biological catalysts.'],
+    ['What is the word equation for photosynthesis?', 'Carbon dioxide + water \u2192 glucose + oxygen. This happens in the presence of light and chlorophyll.', '6.1', 'Photosynthesis', 19, 'State the word equation for photosynthesis as carbon dioxide + water \u2192 glucose + oxygen, in the presence of light and chlorophyll.']],
+  bus: [
+    ['What is the difference between a sole trader and a partnership?', 'A sole trader is owned by one person, who has unlimited liability. A partnership is owned by two or more people who share decisions and profits, and usually have unlimited liability.', '1.4', 'Types of business organisation', 6, 'The main features of sole traders, partnerships, private and public limited companies.'],
+    ['What is market segmentation?', 'Market segmentation is dividing a market into groups of customers with similar needs, for example by age, income or location. A business can then target each group with a suitable product and price.', '3.1', 'Marketing, competition and the customer', 14, 'Identify how and why market segmentation is undertaken.'],
+    ['What is cash flow?', 'Cash flow is the money flowing into and out of a business over a period of time. A business can make a profit and still fail if it runs out of cash to pay its bills.', '5.2', 'Cash-flow forecasting and working capital', 22, 'The importance of cash and of cash-flow forecasting.']],
+  eng: [
+    ['What is the difference between a simile and a metaphor?', 'A simile compares two things using \u201clike\u201d or \u201cas\u201d: the sea was like glass. A metaphor says one thing is another: the sea was glass. Both create an image for the reader.', '1.2', "Reading: writers\u2019 effects", 5, 'Demonstrate understanding of how writers achieve effects and influence readers.'],
+    ['How should I structure a summary?', 'Use your own words and keep to the points the question asks for. Leave out examples and repetition, and stay within the word limit.', '1.4', 'Summary writing', 7, 'Select and use information for specific purposes.'],
+    ['What makes a good descriptive opening?', 'Start with a specific detail rather than a general statement. Use the senses and precise vocabulary, and vary sentence length to control the pace.', '2.1', 'Composition', 10, 'Use a range of appropriate vocabulary and sentence structures.']],
+  cs: [
+    ['How do I convert binary to denary?', 'Write the place values above each bit, starting from 1 on the right and doubling each time. Add the place values where there is a 1. For 1011: 8 + 0 + 2 + 1 = 11.', '1.1', 'Number systems', 4, 'Convert positive denary whole numbers to binary and positive binary to denary.'],
+    ['What does a compiler do?', 'A compiler translates the whole of a high-level program into machine code before it runs. It reports errors after checking the whole program.', '4.2', 'Translators', 16, 'Describe the operation of a compiler and an interpreter.'],
+    ['What is a linear search?', 'A linear search checks each item in a list in order until it finds the target or reaches the end. It works on unsorted lists but can be slow on long ones.', '7.1', 'Algorithm design', 24, 'Understand and use standard methods of solution, including linear search.']],
+  geo: [
+    ['What causes earthquakes?', 'Stress builds up where tectonic plates meet, and the rock suddenly moves. The energy released travels outward from the focus as seismic waves.', '2.1', 'Earthquakes and volcanoes', 9, 'Describe the causes of earthquakes and volcanic eruptions and their effects on people and the environment.'],
+    ['What is a population pyramid?', 'A population pyramid is a bar chart showing a country\u2019s population by age and sex. Its shape shows birth rates, death rates and life expectancy.', '1.1', 'Population dynamics', 5, 'Interpret population pyramids and the structure of the population.'],
+    ['How are meanders formed?', 'A river erodes the outer bend, where water flows faster, and deposits on the inner bend, where it flows slower. Over time the bends grow larger.', '2.2', 'Rivers', 11, 'The formation of river landforms, including meanders and ox-bow lakes.']],
+  hist: [
+    ['Why did the First World War start?', 'The war followed the assassination of Archduke Franz Ferdinand in June 1914. Longer-term causes included the alliance system, rivalry between empires and the arms race.', '1.1', 'Causes of the First World War', 6, 'The alliance system, imperial rivalry and the arms race as causes of war in 1914.'],
+    ['What was the Treaty of Versailles?', 'The Treaty of Versailles was the 1919 peace settlement with Germany. Germany lost territory, had to limit its armed forces and accepted blame for the war.', '2.1', 'The peace treaties of 1919\u201323', 9, 'The terms of the Treaty of Versailles and their impact on Germany.'],
+    ['Why did the League of Nations fail?', 'The League lacked key members, including the USA, and had no army of its own. It failed to stop aggression in Manchuria and Abyssinia in the 1930s.', '2.2', 'The League of Nations', 11, 'The weaknesses of the League and its failure in Manchuria and Abyssinia.']]
+};
+
+const Q = {
+  econ: { en: [['What is inflation?', 'infl'], ['What causes inflation?', 'causes'], ['How is price elasticity of demand calculated?', 'ped']],
+          ar: [['ما هو التضخم؟', 'infl'], ['ما أسباب التضخم؟', 'causes'], ['كيف تُحسب مرونة الطلب السعرية؟', 'ped']] },
+  phys: { en: [['How do I find final velocity?', 'vel']] },
+  chem: { en: [['How do I balance a chemical equation?', 'balance']] },
+  bio: { en: [['Explain osmosis in plant cells', 'osmosis']] }
+};
+Object.keys(QUICK).forEach(s => {
+  Q[s] = Q[s] || { en: [] };
+  QUICK[s].forEach((r, i) => {
+    const key = s + '_' + i;
+    ANS[key] = { blocks: [{ t: 'p', x: r[1] }], cites: [{ s, topic: r[2], title: r[3], page: r[4], lines: [['Candidates should be able to:', 0], [r[5], 1]] }] };
+    Q[s].en.push([r[0], key]);
+  });
+});
+const chipsFor = (s, L) => ((Q[s] && (Q[s][L] || Q[s].en)) || []).slice(0, 3);
+const getAns = (k, L) => (L === 'ar' && ANS_AR[k]) || ANS[k];
+const norm = x => (x || '').toLowerCase().trim().replace(/[?\u061F.!\s]+$/, '');
+function match(text, s) {
+  const n = norm(text);
+  const all = [...((Q[s] && Q[s].en) || []), ...((Q[s] && Q[s].ar) || [])];
+  const hit = all.find(q => norm(q[0]) === n);
+  if (hit) return hit[1];
+  if (s === 'econ') {
+    if (/inflation|تضخم/.test(n)) return /caus|why|أسباب|سبب/.test(n) ? 'causes' : 'infl';
+    if (/elastic|مرونة/.test(n)) return 'ped';
+  }
+  if (s === 'phys' && /velocity|v\s*=\s*u|accelerat/.test(n)) return 'vel';
+  if (s === 'bio' && /osmosis/.test(n)) return 'osmosis';
+  if (s === 'chem' && /balanc/.test(n)) return 'balance';
+  return null;
+}
+let _id = 0;
+const uid = () => 'm' + (++_id);
+const U = text => ({ id: uid(), role: 'user', text });
+const A = key => ({ id: uid(), role: 'ai', key, status: 'done', fb: 0 });
+const USER = { first: 'Layla', email: 'layla.h@example.com' };
+
+function aiMark(size, anim) {
+  const h = React.createElement, o = { transformOrigin: '23px 23px', transformBox: 'view-box' };
+  return h('svg', { viewBox: '0 0 46 46', width: size, height: size, 'aria-hidden': 'true', style: { display: 'block', overflow: 'visible' } },
+    h('g', { style: { ...o, animation: anim ? 'mdrSpin 6s linear infinite' : 'none' } },
+      h('circle', { cx: 23, cy: 23, r: 22, fill: 'none', strokeWidth: 2, style: { stroke: 'var(--mark-ring)' } }),
+      h('path', { d: 'M7.44 7.44 A22 22 0 0 1 38.56 7.44', fill: 'none', strokeWidth: 2, style: { stroke: 'var(--accent)' } })),
+    h('g', { style: { ...o, animation: anim ? 'mdrSpin 9s linear infinite reverse' : 'none' } },
+      h('circle', { cx: 23, cy: 23, r: 15.5, fill: 'none', strokeWidth: 1, style: { stroke: 'var(--mark-inner)' } }),
+      h('circle', { cx: 23, cy: 7.5, r: 2.5, style: { fill: 'var(--accent)' } })),
+    h('circle', { cx: 23, cy: 23, r: 4.5, style: { ...o, fill: 'var(--cta)', animation: anim ? 'mdrPulse 2.6s ease-in-out infinite' : 'none' } }));
+}
+
+class Component extends DCLogic {
+  rootRef = React.createRef();
+  scrollRef = React.createRef();
+  taRef = React.createRef();
+  timers = [];
+  state = this.seed(this.props);
+
+  seed(p, keepW) {
+    const L = p.lang === 'ar' ? 'ar' : 'en';
+    const q = (s, i) => chipsFor(s, L)[i][0];
+    const convs = [
+      { id: 'c1', s: 'econ', g: 'today', msgs: [U(q('econ', 0)), A('infl')] },
+      { id: 'c2', s: 'phys', g: 'today', msgs: [U(q('phys', 0)), A('vel')] },
+      { id: 'c3', s: 'bio', g: 'earlier', msgs: [U(q('bio', 0)), A('osmosis')] },
+      { id: 'c4', s: 'econ', g: 'earlier', msgs: [U(q('econ', 2)), A('ped')] },
+      { id: 'c5', s: 'chem', g: 'earlier', msgs: [U(q('chem', 0)), A('balance')] }
+    ];
+    const screen = p.screen || 'landing', preset = p.preset || 'empty', subject = p.subject || 'econ';
+    let active = null, source = null;
+    if (screen === 'chat') {
+      const map = { one: 'c1', formula: 'c2', long: 'c3', table: 'c4' };
+      if (map[preset]) active = map[preset];
+      else {
+        const e = q('econ', 0), c = q('econ', 1);
+        const msgs = {
+          two: [U(c), A('causes')],
+          outside: [U(e), A('infl'), U(L === 'ar' ? 'ما هي البيتكوين؟' : 'What is Bitcoin?'), { id: uid(), role: 'ai', outside: true, status: 'done', fb: 0 }],
+          thinking: [U(e), { id: uid(), role: 'ai', key: 'infl', status: 'streaming', shown: 1, fb: 0 }],
+          error: [U(c), { id: uid(), role: 'ai', key: 'causes', status: 'error', fb: 0 }]
+        }[preset];
+        const conv = { id: 'p_' + preset, s: msgs ? 'econ' : subject, g: 'today', msgs: msgs || [] };
+        convs.unshift(conv); active = conv.id;
+      }
+      if (p.sourceOpen) {
+        const c = convs.find(x => x.id === active);
+        const ai = [...c.msgs].reverse().find(x => x.role === 'ai' && x.key && x.status === 'done');
+        if (ai) source = { conv: c.id, msg: ai.id, idx: p.sourceIdx || 0 };
+      }
+    }
+    return {
+      lang: L, theme: p.theme === 'light' ? 'light' : 'dark', screen, convs, active, source,
+      user: (screen === 'chat' || screen === 'subjects') ? USER : null,
+      authMode: p.authMode || 'signin', signedOut: preset === 'signedout',
+      email: '', pw: '', first: '', errs: {}, draft: '', focus: false, pending: null,
+      collapsed: !!p.collapsed, drawer: !!p.drawerOpen, menu: !!p.subjectMenu, settings: !!p.settingsOpen,
+      w: keepW || p.frameW || (typeof window !== 'undefined' ? window.innerWidth : 1440)
+    };
+  }
+
+  componentDidMount() {
+    const el = this.rootRef.current;
+    if (el && typeof ResizeObserver !== 'undefined') {
+      this.ro = new ResizeObserver(es => { const w = Math.round(es[0].contentRect.width); if (w && w !== this.state.w) this.setState({ w }); });
+      this.ro.observe(el);
+    }
+    this.onEsc = e => { if (e.key === 'Escape') this.setState({ menu: false, settings: false, drawer: false, source: null }); };
+    window.addEventListener('keydown', this.onEsc);
+    this.toBottom();
+  }
+  componentWillUnmount() { this.ro && this.ro.disconnect(); window.removeEventListener('keydown', this.onEsc); this.timers.forEach(clearTimeout); }
+  componentDidUpdate(prev) {
+    const keys = ['theme', 'lang', 'screen', 'preset', 'subject', 'sourceOpen', 'collapsed', 'settingsOpen', 'drawerOpen', 'subjectMenu', 'authMode', 'sourceIdx'];
+    if (keys.some(k => prev[k] !== this.props[k])) { this.timers.forEach(clearTimeout); this.setState(this.seed(this.props, this.state.w)); return; }
+    const sig = this.sig();
+    if (sig !== this._sig) { this._sig = sig; this.toBottom(); }
+  }
+  sig() { const c = this.conv(); if (!c) return ''; const l = c.msgs[c.msgs.length - 1]; return c.id + c.msgs.length + (l ? l.status + (l.shown || 0) : ''); }
+  toBottom() { const el = this.scrollRef.current; if (el) el.scrollTop = el.scrollHeight; this._sig = this.sig(); }
+  later(fn, ms) { this.timers.push(setTimeout(fn, ms)); }
+  conv() { return this.state.convs.find(c => c.id === this.state.active); }
+  getMsg(cid, mid) { const c = this.state.convs.find(x => x.id === cid); return c && c.msgs.find(m => m.id === mid); }
+  upd(cid, mid, patch) { this.setState(s => ({ convs: s.convs.map(c => c.id !== cid ? c : { ...c, msgs: c.msgs.map(m => m.id === mid ? { ...m, ...patch } : m) }) })); }
+
+  openSubject(s) {
+    const c = { id: uid(), s, g: 'today', msgs: [] };
+    this.setState(st => ({ convs: [c, ...st.convs.filter(x => x.msgs.length)], active: c.id, screen: 'chat', source: null, menu: false, drawer: false, draft: '', settings: false }));
+  }
+  startAsking(s) {
+    if (this.state.user) { if (s) this.openSubject(s); else this.setState({ screen: 'subjects' }); }
+    else this.setState({ screen: 'auth', authMode: 'signup', pending: s || null, errs: {}, signedOut: false });
+  }
+  submitAuth(e) {
+    e.preventDefault();
+    const st = this.state, t = T[st.lang], errs = {};
+    if (!/^\S+@\S+\.\S+$/.test(st.email.trim())) errs.email = t.errEmail;
+    if (st.authMode === 'signup' ? st.pw.length < 8 : !st.pw) errs.pw = st.authMode === 'signup' ? t.errPwLen : t.errPw;
+    if (Object.keys(errs).length) { this.setState({ errs }); return; }
+    const user = { first: st.first.trim() || (st.authMode === 'signin' ? USER.first : ''), email: st.email.trim() };
+    this.setState({ user, errs: {}, signedOut: false, pw: '' }, () => { if (st.pending) this.openSubject(st.pending); else this.setState({ screen: 'subjects' }); });
+  }
+  send(text) {
+    text = (text || '').trim(); if (!text) return;
+    const c = this.conv(); if (!c) return;
+    if (c.msgs.some(m => m.role === 'ai' && (m.status === 'thinking' || m.status === 'streaming'))) return;
+    const key = match(text, c.s);
+    const u = U(text), a = key ? { id: uid(), role: 'ai', key, status: 'thinking', shown: 0, fb: 0 } : { id: uid(), role: 'ai', outside: true, status: 'thinking', fb: 0 };
+    this.setState(s => ({ draft: '', convs: s.convs.map(x => x.id === c.id ? { ...x, g: 'today', msgs: [...x.msgs, u, a] } : x) }), () => {
+      if (this.taRef.current) this.taRef.current.style.height = 'auto';
+      this.run(c.id, a.id);
+    });
+  }
+  run(cid, mid) {
+    this.later(() => {
+      const m = this.getMsg(cid, mid); if (!m) return;
+      if (m.outside) { this.upd(cid, mid, { status: 'done' }); return; }
+      const n = getAns(m.key, this.state.lang).blocks.length;
+      this.upd(cid, mid, { status: 'streaming', shown: 1 });
+      const step = () => {
+        const m2 = this.getMsg(cid, mid); if (!m2) return;
+        if (m2.shown >= n) { this.upd(cid, mid, { status: 'done' }); return; }
+        this.upd(cid, mid, { shown: m2.shown + 1 }); this.later(step, 500);
+      };
+      this.later(step, 500);
+    }, 1200);
+  }
+
+  renderVals() {
+    const st = this.state, L = st.lang, t = T[L], rtl = L === 'ar';
+    const w = st.w || 1440, D = w >= 1100, M = w < 700, touch = !D;
+    const px = n => n + 'px';
+    const conv = this.conv();
+    const subj = conv ? conv.s : 'econ', sName = sname(subj, L);
+    const tap = touch ? '44px' : '36px';
+    const m = {
+      padX: px(D ? 32 : M ? 16 : 24), h1: px(D ? 64 : M ? 40 : 52), heroCols: M ? 'minmax(0,1fr)' : 'minmax(0,1.4fr) minmax(0,1fr)',
+      heroPad: M ? '8px 0 48px' : '72px 0 96px', markOrder: M ? '-1' : '0', stmtCols: M ? 'minmax(0,1fr)' : 'repeat(3,minmax(0,1fr))', stmtSize: px(M ? 20 : 22),
+      subjSecPad: M ? '48px 0 56px' : '80px 0 88px', subjCols: M ? 'repeat(2,minmax(0,1fr))' : 'repeat(auto-fill,minmax(200px,1fr))', cardH: px(M ? 100 : 124),
+      cardTitle: px(M ? 18 : 20), gridGap: px(M ? 12 : 16), subjPad: M ? '28px 16px 48px' : '56px 32px 72px', subjH1: px(M ? 30 : 40),
+      authPad: M ? '8px 16px 40px' : '48px 16px 64px', cardPad: M ? '24px 20px' : '32px', headH: px(M ? 56 : 60), headPad: px(M ? 6 : 16),
+      chipJustify: M ? 'center' : 'flex-start', chipH: M ? '40px' : '36px', convPad: M ? '20px 16px 24px' : '40px 24px 32px', composerPad: px(M ? 12 : 24),
+      composerBottom: px(M ? 10 : 16), bubbleMax: M ? '88%' : '80%', tap, citeH: touch ? '44px' : '34px', sendSize: touch ? '44px' : '40px',
+      modalAlign: M ? 'flex-end' : 'center', modalPad: M ? '0' : '16px', emptyTitle: px(M ? 32 : 40)
+    };
+    const ds = { fb: 0 };
+    const msgs = (conv ? conv.msgs : []).map(msg => {
+      if (msg.role === 'user') return { isUser: true, text: msg.text };
+      const ans = msg.key ? getAns(msg.key, L) : null;
+      const done = msg.status === 'done', err = msg.status === 'error';
+      const blocks = ans && !err ? (done ? ans.blocks : ans.blocks.slice(0, msg.shown || 0)) : [];
+      const isSrc = c => st.source && st.source.msg === msg.id && st.source.idx === c;
+      return {
+        isAi: true, mark: aiMark(24, !done && !err), thinking: msg.status === 'thinking', thinkingText: t.checking.replace('{s}', sName),
+        blocks: blocks.map(b => ({
+          isP: b.t === 'p', isUl: b.t === 'ul', isOl: b.t === 'ol', isTable: b.t === 'table', isFormula: b.t === 'f',
+          x: b.x, items: (b.items || []).map((x, i) => ({ x, n: (i + 1) + '.' })), head: b.head || [], rows: (b.rows || []).map(r => ({ cells: r })),
+          where: (b.where || []).map(([k, v]) => ({ k, v })), hasWhere: !!b.where, dir: b.rtl ? 'rtl' : 'ltr',
+          fstyle: b.plain ? 'normal' : 'italic', fsize: b.plain ? '18px' : '26px'
+        })),
+        isOutside: msg.outside && done, out1: t.out1.replace('{s}', sName), out2: t.out2,
+        isError: err, onRetry: () => { this.upd(conv.id, msg.id, { status: 'thinking', shown: 0 }); this.run(conv.id, msg.id); },
+        hasCites: !!(ans && done && ans.cites && ans.cites.length),
+        cites: (ans && done ? ans.cites : []).map((c, i) => {
+          const label = rtl ? `منهج ${sname(c.s, 'ar')} · الموضوع ${c.topic} · ص ${c.page}` : `${sname(c.s, 'en')} syllabus · Topic ${c.topic} · p.${c.page}`;
+          return { label, aria: t.openSource + label, active: !!isSrc(i), bg: isSrc(i) ? 'var(--raised)' : 'transparent',
+            onOpen: () => this.setState({ source: isSrc(i) ? null : { conv: conv.id, msg: msg.id, idx: i }, menu: false }) };
+        }),
+        showFb: done, up: msg.fb === 1, down: msg.fb === -1,
+        upColor: msg.fb === 1 ? 'var(--accent)' : 'var(--muted)', downColor: msg.fb === -1 ? 'var(--accent)' : 'var(--muted)',
+        upFill: msg.fb === 1 ? 'currentColor' : 'none', downFill: msg.fb === -1 ? 'currentColor' : 'none',
+        onUp: () => this.upd(conv.id, msg.id, { fb: msg.fb === 1 ? 0 : 1 }), onDown: () => this.upd(conv.id, msg.id, { fb: msg.fb === -1 ? 0 : -1 })
+      };
+    });
+
+    let srcData = null;
+    if (st.source && conv && st.source.conv === conv.id) {
+      const mm = conv.msgs.find(x => x.id === st.source.msg), ans = mm && getAns(mm.key, L), c = ans && ans.cites[st.source.idx];
+      if (c) srcData = { doc: t.syllabus.replace('{s}', sname(c.s, L)), topic: c.topic + '  ' + c.title, page: String(c.page), heading: c.topic + ' ' + c.title, lines: c.lines.map(([x, h]) => ({ x, hl: !!h, plain: !h })) };
+    }
+    const srcPos = D ? { pos: 'relative', top: 'auto', bottom: 'auto', w: '400px', h: '100%', maxH: 'none', z: '1', bStart: '1px solid var(--border)', bTop: 'none', radius: '0' }
+      : M ? { pos: 'absolute', top: 'auto', bottom: '0', w: '100%', h: 'auto', maxH: '82%', z: '30', bStart: 'none', bTop: '1px solid var(--border)', radius: '12px 12px 0 0' }
+      : { pos: 'absolute', top: '0', bottom: '0', w: '400px', h: '100%', maxH: 'none', z: '30', bStart: '1px solid var(--border)', bTop: 'none', radius: '0' };
+
+    const hist = g => st.convs.filter(c => c.g === g && c.msgs.length).map(c => {
+      const cur = c.id === st.active;
+      return { title: c.msgs[0].text, sub: sname(c.s, L), current: cur, bg: cur ? 'var(--raised)' : 'transparent', color: cur ? 'var(--heading)' : 'var(--body)',
+        onOpen: () => this.setState({ active: c.id, source: null, drawer: false, menu: false, draft: '', convs: st.convs.filter(x => x.msgs.length || x.id === c.id) }) };
+    });
+    const today = hist('today'), earlier = hist('earlier');
+    const user = st.user || USER;
+    const displayName = user.first || user.email.split('@')[0];
+    const busy = conv && conv.msgs.some(x => x.status === 'thinking' || x.status === 'streaming');
+    const canSend = !!st.draft.trim() && !busy;
+    const errs = st.errs;
+    const chip = (on) => ({ bg: on ? 'var(--raised)' : 'var(--card)', border: on ? 'var(--accent)' : 'var(--border)', color: on ? 'var(--accent)' : 'var(--body)' });
+    const en = chip(!rtl), ar = chip(rtl), dk = chip(st.theme !== 'light'), lt = chip(st.theme === 'light');
+    const isEmpty = !!conv && conv.msgs.length === 0;
+
+    return {
+      t, m, dir: rtl ? 'rtl' : 'ltr', lang: L, rootRef: this.rootRef, scrollRef: this.scrollRef, taRef: this.taRef,
+      rootH: this.props.frameH || '100vh',
+      fBody: rtl ? "'IBM Plex Sans Arabic','IBM Plex Sans',sans-serif" : "'IBM Plex Sans','IBM Plex Sans Arabic',sans-serif",
+      fHead: rtl ? "'IBM Plex Sans Arabic',sans-serif" : "'Source Serif 4',Georgia,serif",
+      fMono: rtl ? "'IBM Plex Sans Arabic',sans-serif" : "'IBM Plex Mono',monospace",
+      fOther: rtl ? "'IBM Plex Sans',sans-serif" : "'IBM Plex Sans Arabic',sans-serif",
+      monoTrack: rtl ? '0' : '0.12em', monoCase: rtl ? 'none' : 'uppercase', headTrack: rtl ? '0' : '-0.02em', h1Lh: rtl ? '1.3' : '1.05',
+      citeSize: rtl ? '12.5px' : '10.5px', alignStart: rtl ? 'right' : 'left', flip: rtl ? 'scaleX(-1)' : 'none',
+      otherLang: rtl ? 'en' : 'ar', otherLangName: rtl ? 'English' : 'العربية',
+      toggleLang: () => this.setState({ lang: rtl ? 'en' : 'ar' }),
+      isLanding: st.screen === 'landing', isAuth: st.screen === 'auth', isSubjects: st.screen === 'subjects', isChat: st.screen === 'chat',
+      heroMark: aiMark(D ? 260 : M ? 120 : 200, true),
+      statements: [t.s1, t.s2, t.s3].map((x, i) => ({ x, n: '0' + (i + 1) })),
+      subjects: SUBJ.map((s, i) => ({ name: s[L], n: String(i + 1).padStart(2, '0'), current: s.id === subj,
+        bg: s.id === subj ? 'var(--raised)' : 'transparent', color: s.id === subj ? 'var(--accent)' : 'var(--body)',
+        onStart: () => this.startAsking(s.id), onSwitch: () => this.openSubject(s.id) })),
+      goSignIn: () => this.setState({ screen: 'auth', authMode: 'signin', errs: {}, signedOut: false }),
+      startAsking: () => this.startAsking(null),
+      goLanding: () => this.setState({ screen: 'landing' }),
+      isSignUp: st.authMode === 'signup', isSignIn: st.authMode === 'signin', showSignedOut: st.signedOut && st.authMode === 'signin',
+      authTitle: st.authMode === 'signup' ? t.signUp : t.signIn, authCta: st.authMode === 'signup' ? t.signUp : t.signIn,
+      authSwitchQ: st.authMode === 'signup' ? t.haveAcc : t.newHere, authSwitchA: st.authMode === 'signup' ? t.signIn : t.signUp,
+      toggleAuth: () => this.setState({ authMode: st.authMode === 'signup' ? 'signin' : 'signup', errs: {} }),
+      first: st.first, email: st.email, pw: st.pw, pwAuto: st.authMode === 'signup' ? 'new-password' : 'current-password',
+      onFirst: e => this.setState({ first: e.target.value }), onEmail: e => this.setState({ email: e.target.value }), onPw: e => this.setState({ pw: e.target.value }),
+      emailInvalid: !!errs.email, errEmail: errs.email || '', emailBorder: errs.email ? 'var(--warn-border)' : 'var(--border)',
+      pwInvalid: !!errs.pw, errPw: errs.pw || '', pwBorder: errs.pw ? 'var(--warn-border)' : 'var(--border)',
+      submitAuth: e => this.submitAuth(e), noop: e => e.preventDefault(),
+      initials: (displayName[0] || 'M').toUpperCase(), displayName, userEmail: user.email,
+      openSettings: () => this.setState({ settings: true, menu: false, drawer: false }), closeSettings: () => this.setState({ settings: false }),
+      settingsBg: e => { if (e.target === e.currentTarget) this.setState({ settings: false }); },
+      settingsOpen: st.settings, theme: st.theme, isDarkT: st.theme !== 'light', isLightT: st.theme === 'light', setDark: () => this.setState({ theme: 'dark' }), setLight: () => this.setState({ theme: 'light' }), dkBg: dk.bg, dkBorder: dk.border, dkColor: dk.color, ltBg: lt.bg, ltBorder: lt.border, ltColor: lt.color, markSrc: st.theme === 'light' ? 'assets/madar-mark-light-bg.svg' : 'assets/madar-mark-dark-bg.svg', logoSrc: st.theme === 'light' ? 'assets/madar-logo-light-bg.svg' : 'assets/madar-logo-dark-bg.svg', isEn: !rtl, isAr: rtl,
+      setEn: () => this.setState({ lang: 'en' }), setAr: () => this.setState({ lang: 'ar' }),
+      enBg: en.bg, enBorder: en.border, enColor: en.color, arBg: ar.bg, arBorder: ar.border, arColor: ar.color,
+      signOut: () => { this.timers.forEach(clearTimeout); this.setState({ settings: false, user: null, screen: 'auth', authMode: 'signin', signedOut: true, source: null, email: '', pw: '' }); },
+      showRail: D && st.collapsed, showSidebar: (D && !st.collapsed) || (!D && st.drawer), showDrawerScrim: !D && st.drawer,
+      sb: D ? { pos: 'relative', z: '1', w: '280px' } : { pos: 'absolute', z: '40', w: '300px' },
+      sbToggle: () => D ? this.setState({ collapsed: !st.collapsed }) : this.setState({ drawer: false }),
+      sbToggleLabel: D ? t.collapse : t.close,
+      openDrawer: () => this.setState({ drawer: true, menu: false }), closeDrawer: () => this.setState({ drawer: false }),
+      showMenuBtn: !D, isMobile: M,
+      newChat: () => this.openSubject(subj),
+      sName, today, earlier, hasToday: today.length > 0, hasEarlier: earlier.length > 0,
+      menuOpen: st.menu, toggleMenu: () => this.setState({ menu: !st.menu, drawer: false }), closeMenu: () => this.setState({ menu: false }),
+      menu: M ? { top: '0', start: '0', w: '100%', radius: '0 0 12px 12px', maxH: '85%', scrim: 'var(--scrim)' }
+        : { top: '64px', start: D ? (st.collapsed ? '80px' : '296px') : '68px', w: '300px', radius: '12px', maxH: 'calc(100% - 80px)', scrim: 'transparent' },
+      msgs, isEmpty, convJustify: isEmpty ? 'flex-end' : 'flex-start',
+      chips: chipsFor(subj, L).map(([q]) => ({ q, onAsk: () => this.send(q) })),
+      draft: st.draft, placeholder: t.askAbout.replace('{s}', sName),
+      onDraft: e => { const el = e.target; el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 168) + 'px'; this.setState({ draft: el.value }); },
+      onKey: e => { if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); if (canSend) this.send(st.draft); } },
+      onFocus: () => this.setState({ focus: true }), onBlur: () => this.setState({ focus: false }),
+      composerBorder: st.focus ? 'var(--accent)' : 'var(--border)',
+      onSend: () => this.send(st.draft), sendDisabled: !canSend,
+      sendBg: canSend ? 'var(--action)' : 'var(--raised)', sendColor: canSend ? 'var(--on-action)' : 'var(--muted)', sendCursor: canSend ? 'pointer' : 'default',
+      srcOpen: !!srcData, src: { ...(srcData || {}), ...srcPos }, showSrcScrim: !!srcData && !D,
+      closeSource: () => this.setState({ source: null })
+    };
+  }
+}
+</script>
+</body>
+</html>

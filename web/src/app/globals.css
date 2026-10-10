@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+/* Madar AI theme tokens — dark is the default, light via [data-theme="light"] */
+:root,
+:root[data-theme="dark"] {
+  --page: #0b1029;
+  --panel: #0e1533;
+  --card: #111838;
+  --raised: #1a2350;
+  --border: #2a3363;
+  --border-strong: #3a4586;
+  --accent: #8fe0cf;
+  --action: #e27a4e;
+  --on-action: #ffffff;
+  --cta: #e27a4e;
+  --on-cta: #ffffff;
+  --heading: #eaf0ff;
+  --body: #d5daf7;
+  --muted: #9aa3d0;
+  --hl: #2a3363;
+  --warn-bg: #33280f;
+  --warn-border: #6b5427;
+  --warn-text: #e0ae55;
+  --scrim: rgba(11, 16, 41, 0.72);
+  --mark-ring: rgba(143, 224, 207, 0.35);
+  --mark-inner: rgba(143, 224, 207, 0.45);
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --page: #fbf7f1;
+  --panel: #f4eee5;
+  --card: #ffffff;
+  --raised: #efe7da;
+  --border: #e8e0d5;
+  --border-strong: #d3c6b4;
+  --accent: #0f5c52;
+  --action: #0f5c52;
+  --on-action: #ffffff;
+  --cta: #d97048;
+  --on-cta: #ffffff;
+  --heading: #221f1c;
+  --body: #3b3631;
+  --muted: #635c54;
+  --hl: #f8dccd;
+  --warn-bg: #fbf1dc;
+  --warn-border: #e2c68a;
+  --warn-text: #7a5410;
+  --scrim: rgba(34, 31, 28, 0.4);
+  --mark-ring: rgba(15, 92, 82, 0.28);
+  --mark-inner: rgba(15, 92, 82, 0.4);
+  color-scheme: light;
+}
+
+@theme {
+  --breakpoint-tab: 700px;
+  --breakpoint-desk: 1100px;
+}
+
+@theme inline {
+  --color-page: var(--page);
+  --color-panel: var(--panel);
+  --color-card: var(--card);
+  --color-raised: var(--raised);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-accent: var(--accent);
+  --color-action: var(--action);
+  --color-on-action: var(--on-action);
+  --color-cta: var(--cta);
+  --color-on-cta: var(--on-cta);
+  --color-heading: var(--heading);
+  --color-body: var(--body);
+  --color-muted: var(--muted);
+  --color-hl: var(--hl);
+  --color-warn-bg: var(--warn-bg);
+  --color-warn-border: var(--warn-border);
+  --color-warn-text: var(--warn-text);
+  --font-sans: var(--font-plex-sans), system-ui, sans-serif;
+  --font-serif: var(--font-source-serif), Georgia, serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+body {
+  background: var(--page);
+  color: var(--body);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Madar AI animated mark */
+@keyframes madar-spin { to { transform: rotate(360deg); } }
+@keyframes madar-spin-rev { to { transform: rotate(-360deg); } }
+@keyframes madar-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(0.78); opacity: 0.72; }
+}
+.madar-outer { transform-origin: 23px 23px; animation: madar-spin 6s linear infinite; }
+.madar-inner { transform-origin: 23px 23px; animation: madar-spin-rev 9s linear infinite; }
+.madar-core { transform-origin: 23px 23px; animation: madar-pulse 2.6s ease-in-out infinite; }
+
+:root[data-theme="light"] .logo-dark { display: none; }
+:root:not([data-theme="light"]) .logo-light { display: none; }
