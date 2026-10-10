@@ -10,15 +10,15 @@ import { initial, useExam, useUser } from "@/lib/store";
 
 export default function SubjectsPage() {
   const router = useRouter();
-  const { user } = useUser();
+  const { user, ready } = useUser();
   const [exam, setExam] = useExam();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [changing, setChanging] = useState(false);
   const [board, setBoard] = useState<BoardId | null>(null);
 
   useEffect(() => {
-    if (!user) router.replace("/auth/sign-in");
-  }, [user, router]);
+    if (ready && !user) router.replace("/auth/sign-in");
+  }, [ready, user, router]);
 
   if (!user) return null;
 

@@ -35,10 +35,11 @@ function subscribe(cb: () => void) {
 }
 
 function useStored(key: string) {
-  const raw = useSyncExternalStore(
+  // undefined = not read yet (server render / hydration); null = nothing stored
+  const raw = useSyncExternalStore<string | null | undefined>(
     subscribe,
     () => read(key),
-    () => null,
+    () => undefined,
   );
   const set = useCallback((v: string | null) => write(key, v), [key]);
   return [raw, set] as const;
@@ -73,7 +74,7 @@ export function useUser() {
   }, [raw]);
   const signIn = useCallback((u: User) => set(JSON.stringify(u)), [set]);
   const signOut = useCallback(() => set(null), [set]);
-  return { user, signIn, signOut };
+  return { user, ready: raw !== undefined, signIn, signOut };
 }
 
 export function initial(user: User) {
