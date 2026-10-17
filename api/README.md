@@ -1,7 +1,8 @@
 # Madar AI: api
 
-Python backend. For now it contains the **ingestion** step: turning course PDFs (a syllabus and a
-textbook) into small, labelled, citable **chunks**. Search, embeddings and the answer API come next.
+Python backend. For now it contains the **ingestion** step: turning a course textbook PDF into
+small, labelled, citable **chunks**, plus local embeddings and search over them. The database and the
+answer API come next.
 
 ## Setup and commands
 
@@ -11,16 +12,12 @@ Python 3.12 and dependencies are managed with [uv](https://docs.astral.sh/uv/).
 cd api
 uv run pytest                     # run the tests
 
-# syllabus -> data/syllabus-chunks.jsonl
-uv run python -m api.ingest ../syllabus/<syllabus>.pdf --kind syllabus \
-  --course-id cambridge-igcse-econ --doc "Economics syllabus"
-
 # textbook -> data/textbook-chunks.jsonl
-uv run python -m api.ingest ../content/openstax/principles-of-economics-3e.pdf --kind textbook \
+uv run python -m api.ingest ../content/openstax/principles-of-economics-3e.pdf \
   --course-id cambridge-igcse-econ --doc "Principles of Economics 3e"
 ```
 
-The source PDFs (`syllabus/`, `content/`) and the generated chunks (`api/data/`) are copyrighted or
+The source PDFs (`content/`) and the generated chunks (`api/data/`) are copyrighted or
 derived from copyrighted material, so they are git-ignored. Never commit them.
 
 ## Why chunks
@@ -189,6 +186,26 @@ One JSON object per line:
 At answer time `src/api/retrieval/context.py` merges a matched chunk with its neighbours and drops
 the duplicated overlap paragraphs before the text is sent to the LLM.
 
+## Embeddings and search (in memory, no database yet)
+
+```bash
+# turn every chunk's `text` into a vector (local model, no API key). The first run downloads the
+# 67 MB model into api/.cache (git-ignored); later runs are offline.
+uv run python -m api.retrieval embed
+
+# find the chunks closest to a question
+uv run python -m api.retrieval ask "What happens if the price is above equilibrium?" -k 4
+```
+
+- Model: `BAAI/bge-small-en-v1.5` via fastembed (384 numbers per chunk). It is a free baseline; a
+  bigger model (`bge-base-en-v1.5`, `bge-large-en-v1.5`) is a one-name change, but needs a re-embed.
+- Output: `data/textbook-chunks.bge-small-en-v1.5.npy`, one row per chunk, in the same order as
+  `textbook-chunks.jsonl`. Vectors are length-normalised, so a dot product is the cosine similarity.
+- Questions are prefixed with the BGE "search query" instruction before embedding.
+- First observations (5 questions, not a proof): in-book questions scored 0.73 to 0.88 for the top
+  result, out-of-book questions about 0.60 to 0.63. A score threshold may be able to answer "not in
+  the book" without calling the LLM, but it must be tuned on a real evaluation set.
+
 ## Code reference
 
 Nothing here talks to a database, an embedding model or an LLM yet. These files only produce and
@@ -196,10 +213,9 @@ read chunks.
 
 ```
 __main__.main()
-   ├─ --kind textbook -> parse_book() -> slice_section() -> to_units() -> pack()
-   │                                       └ clean_block, body_paragraphs, printed_page, norm
-   └─ --kind syllabus -> section_pages() -> parse()
-        └─ chunks are saved with to_dict() -> data/*.jsonl
+   └─ parse_book() -> slice_section() -> to_units() -> pack()
+        │                └ clean_block, body_paragraphs, printed_page, norm
+        └─ chunks are saved with to_dict() -> data/textbook-chunks.jsonl
 
 later, at answer time:  build_context()   (uses prev_id / next_id from those files)
 ```
@@ -249,27 +265,30 @@ Phases 2 and 3, filling and overlap:
 | `pack()` | Fills chunks with units up to about 1,000 characters and copies a small last unit (300 or fewer) to the start of the next chunk. Its inner function `finish()` saves the current chunk. |
 | `parse_book()` | The conductor: reads the outline, works out printed page numbers, loops over every section calling `slice_section` and `pack`, and returns all `BookChunk` objects plus simple statistics. |
 
-### `src/api/ingest/syllabus.py`: the syllabus chunker
-
-| Function | What it does |
-|---|---|
-| `HEADING_RE`, `MARKER_RE`, `NOISE_RES` | Patterns for numbered headings, bullet markers, and junk lines (header, footer, page number). |
-| `Line` / `Line.render()` | One syllabus line (a bullet marker and its text), rendered as display text like `• demand-pull`. |
-| `Chunk` / `Chunk.to_dict()` | One syllabus item (for example 4.7.3) and its JSON record, including `text` for searching and the `id`. |
-| `section_pages()` | Picks the PDF pages of "Subject content", including the first page that has a different header. |
-| `parse()` | A line-by-line state machine that recognises headings, bullets and wrapped lines and builds one chunk per numbered item. |
-
 ### `src/api/ingest/__main__.py`: the command-line entry
 
 | Function | What it does |
 |---|---|
-| `main()` | Reads `--kind`, `--course-id`, `--doc`, `--out`, runs the right parser, writes one JSON line per chunk to `data/…jsonl` and prints a summary. |
+| `main()` | Reads `--course-id`, `--doc`, `--out`, runs `parse_book`, writes one JSON line per chunk to `data/textbook-chunks.jsonl` and prints a summary. |
 
 ### `src/api/retrieval/context.py`: used at answer time
 
 | Function | What it does |
 |---|---|
 | `build_context()` | Merges a matched chunk with the chunk before and after it, removes the repeated overlap paragraphs, and returns the passage, the matched paragraphs (to highlight), the page range, and the citation pages. |
+
+### `src/api/retrieval/embedding.py`, `search.py`, `__main__.py`: embeddings and search
+
+| Function | What it does |
+|---|---|
+| `get_model()` | Loads (and caches) the fastembed model, stored in `api/.cache/fastembed`. |
+| `embed_passages()` | Embeds a list of chunk texts into normalised vectors. |
+| `embed_query()` | Embeds one question, with the BGE query prefix. |
+| `normalise()` | Scales each vector to length 1 (a zero vector stays zero). |
+| `top_k()` | Returns the indexes and cosine scores of the k closest vectors. |
+| `load_index()` | Loads the chunks file and its vectors, and checks that their counts match. |
+| `search()` | Embeds a question and returns the k best chunks with scores. |
+| `cmd_embed()`, `cmd_ask()` | The `embed` and `ask` commands (`python -m api.retrieval …`). |
 
 ### Boilerplate that can be ignored
 
@@ -278,10 +297,10 @@ Phases 2 and 3, filling and overlap:
 | `src/api/__init__.py` | A `main()` generated by `uv` that only prints a greeting. Unused. |
 | `ingest/__init__.py`, `retrieval/__init__.py` | Empty. They only mark the folders as Python packages. |
 
-### Tests (20)
+### Tests (18)
 
 | File | Tests | What they check |
 |---|---|---|
 | `tests/test_textbook.py` | 11 | Cleaning and page numbers, section cutting, size-based packing, colon and heading gluing, overlap on and off. |
-| `tests/test_syllabus.py` | 5 | One chunk per item, topics and pages, bullets and wrapping, junk removal, the `text` and `id` format. |
 | `tests/test_context.py` | 4 | No duplicated overlap, no-neighbour and one-neighbour cases, highlight and citation scope. |
+| `tests/test_search.py` | 3 | Vector normalisation, ranking by cosine score, asking for more results than exist. |

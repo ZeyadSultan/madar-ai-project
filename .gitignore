@@ -1,7 +1,6 @@
 .DS_Store
 
-# Copyrighted source material (syllabus, textbooks): never push to GitHub
-syllabus/
+# Copyrighted source material (textbooks): never push to GitHub
 content/
 
 # Secrets
@@ -12,3 +11,4 @@ content/
 api/data/
 __pycache__/
 .venv/
+.cache/
